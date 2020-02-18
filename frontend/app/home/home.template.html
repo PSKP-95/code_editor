@@ -1,0 +1,25 @@
+<div class="ribbon">
+  
+  <select class="btn btn-primary" id="ext" ng-change="$ctrl.langChange()" ng-model="$ctrl.ext">
+    <option value=".cpp">CPP</option>
+    <option value=".py">Python</option>
+    <option value=".c">C</option>
+    <option value=".java">Java</option>
+  </select>
+  <button class="btn btn-success" ng-click="$ctrl.runcode()"><i class="fa fa-play" aria-hidden="true"></i>
+  </button>
+</div>
+<hr>
+<div class="container-block">
+  <div class="explorer">
+
+  </div>
+  <div class="codepane">
+    <textarea class="language-cpp" id="code" name="code" cols="30" rows="10"></textarea>
+    <div class="io">
+      <textarea name="input" id="input" cols="20" rows="10" ng-model="$ctrl.input">{{$ctrl.input}}</textarea>
+    <textarea name="output" id="output" cols="20" rows="10" ng-model="$ctrl.output" readonly>{{$ctrl.output}}</textarea>
+    </div>
+  </div>
+</div>
+

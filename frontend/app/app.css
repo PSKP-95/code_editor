@@ -1,0 +1,38 @@
+.container-block {
+    display: flex;
+}
+.explorer {
+    flex: 20%;
+    height: 90vh;
+    background-color: black;
+}
+
+.ribbon {
+    width: 100vw;
+    height: 5vh;
+    padding: 10px;
+}
+
+.codepane {
+    flex: 75%;
+    height: 90vh;
+}
+
+#code {
+    width: 100%;
+    height: 69vh;
+}
+
+.io {
+    display: flex;
+}
+
+#input{
+    flex: 50%;
+    height: 20vh;
+}
+
+#output{
+    flex: 50%;
+    height: 20vh;
+}
