@@ -24,7 +24,7 @@ textarea,pre {
 
 
 .table-ex {
-    width: 25vw;
+    width: 100%;
     display: block;
     overflow-x: scroll;
     overflow-y: scroll;
@@ -43,6 +43,7 @@ textarea,pre {
 .table-ex tr td:first-child{
     width: 10%;
 }
+
 .table-ex tr td,th{
     padding-left: 5px;
     overflow-x: hidden;
