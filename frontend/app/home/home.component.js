@@ -120,14 +120,14 @@ angular.
         }
 
         // creat new file in current directory
-        this.createFile = function() {
+        this.createFile = function(content) {
             $http({
                 url: 'http://127.0.0.1:8888/touch',
                 method: "POST",
                 data: {
                     "filename": prompt("Enter Filename",""),
                     "parent": this.parent_id,
-                    "content": ""
+                    "content": content
                 }
             }).then(function(response) {
                 alert(response.data);
@@ -147,6 +147,24 @@ angular.
                 alert(response.data);
                 self.loadDirUsingId(self.parent_id);  // refresh directory
             });
+        }
+
+        this.saveFile = function() {
+            if(this.openfile != ""){
+                $http({
+                    url: 'http://127.0.0.1:8888/edit',
+                    method: "POST",
+                    data: {
+                        "filename": this.openfile[2],
+                        "parent": this.openfile[3],
+                        "content": editAreaLoader.getValue("code")
+                    }
+                }).then(function(response) {
+                    alert(response.data);
+                });
+            } else {
+                this.createFile(editAreaLoader.getValue("code"));
+            }
         }
     }]
   });

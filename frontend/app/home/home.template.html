@@ -1,7 +1,7 @@
 <div class="ribbon">
-  <i ng-click="$ctrl.createFile()" class="fas fa-file-medical"></i>
+  <i ng-click="$ctrl.createFile('')" class="fas fa-file-medical"></i>
   <i ng-click="$ctrl.createDir()" class="fas fa-folder-plus"></i>
-  <i class="fas fa-save"></i>
+  <i ng-click="$ctrl.saveFile()" class="fas fa-save"></i>
 
   <select class="btn btn-primary" id="ext" ng-change="$ctrl.langChange()" ng-model="$ctrl.ext">
     <option value=".cpp">CPP</option>
