@@ -1,10 +1,67 @@
+textarea,pre {
+    -moz-tab-size : 2;
+    -o-tab-size : 2;
+    tab-size : 2;
+}
+
 .container-block {
     display: flex;
 }
 .explorer {
     flex: 20%;
     height: 90vh;
-    background-color: black;
+    overflow-x: hidden;
+    background-color: rgb(235, 231, 231);
+    border-right: 6px solid black;
+    padding: 0px;
+}
+
+.testcase {
+    height: 23vh;
+    overflow-x: scroll;
+    overflow-y: scroll;
+}
+
+
+.table-ex {
+    width: 25vw;
+    display: block;
+    overflow-x: scroll;
+    overflow-y: scroll;
+    height: 62vh;
+}
+
+.table-ex thead{
+    font-weight: bold;
+}
+
+.table-ex tr{
+    height: 3px;
+    border: 1px solid black;
+}
+
+.table-ex tr td:first-child{
+    width: 10%;
+}
+.table-ex tr td,th{
+    padding-left: 5px;
+    overflow-x: hidden;
+}
+.controls {
+    height: 30px;
+    background-color: white;
+    border-top: 2px solid black;
+    overflow-x: hidden;
+    display: flex;
+}
+.controls div{
+    text-align: center;
+    border: 2px solid black;
+}
+
+.controls i{
+    color: rgb(4, 4, 49);
+    padding: 3px;
 }
 
 .ribbon {

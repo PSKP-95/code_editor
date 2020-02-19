@@ -1,7 +1,7 @@
-import pymysql, hashlib
+import pymysql, hashlib, json
 
 def connection():
-	conn = pymysql.connect('localhost','root','pskp@a95a','neural_builder')
+	conn = pymysql.connect('localhost','root','','code_rtc')
 	cur = conn.cursor()
 	return (conn,cur)
 
@@ -59,33 +59,49 @@ def new_signup(username, password, email):
 
 	return True
 
-def check_network(username,file_name,status = 0):
+def get_dir_content(dir_id):
+
 	conn, cur = connection()
 
-	sql = """SELECT * FROM networks where author = %s and file_name = %s"""
-	args = (username,file_name)
+	sql = "select node_id, node, type, parent from bucket where parent = %s"
+
+	args = (dir_id)
 
 	cur.execute(sql,args)
-
 	data = cur.fetchall()
-	if not status and len(data)>0:
-		print("[src.db.check_networks] : Network Exists")
+
+	conn.commit()
+	conn.close()
+
+	return json.dumps(data)
+
+def check_dir(folder,parent):
+	conn, cur = connection()
+
+	sql = "select * from bucket where parent = %s and node = %s"
+
+	args = (parent,folder)
+
+	cur.execute(sql,args)
+	data = cur.fetchall()
+	
+	conn.commit()
+	conn.close()
+	
+	if len(data) > 0:
 		return True
-	elif status and len(data)>0:
-		print("[src.db.check_networks] : Returning list Network")
-		return (True, data)
+	
 	return False
 
-
-def add_network_entry(username,file_name):
-	if check_network(username,file_name):
-		return True
+def make_dir(folder, parent):
+	if check_dir(folder,parent):
+		return "Folder already exist"
 
 	conn, cur = connection()
 
-	sql = """insert into networks(author,file_name) values(%s,%s)"""
+	sql = """insert into bucket(type,node,file,parent) values(1,%s,"",%s)""" # type = 1 means folder
 
-	args = (username,file_name)
+	args = (folder, parent)
 
 	cur.execute(sql,args)
 
@@ -93,83 +109,56 @@ def add_network_entry(username,file_name):
 	conn.commit()
 	conn.close()
 
-	return True	
+	return "folder created successfully"
 
-
-def my_networks(username):
+def get_file_content(filename,parent):
 	conn, cur = connection()
 
-	sql = """SELECT * FROM networks where author = %s"""
-	args = (username)
+	sql = "select file from bucket where parent = %s and node = %s"
+
+	args = (parent,filename)
+
+	cur.execute(sql,args)
+	data = cur.fetchall()
+	
+	conn.commit()
+	conn.close()
+	if len(data) == 0:
+		return "file not found"
+	return data[0][0]
+
+def create_file(filename, parent, content):
+	if check_dir(filename,parent):
+		return "file already exist"
+
+	conn, cur = connection()
+
+	sql = """insert into bucket(type,node,file,parent) values(0,%s,%s,%s)""" # type = 1 means folder
+
+	args = (filename,content, parent)
 
 	cur.execute(sql,args)
 
-	data = cur.fetchall()
-
-	return data
-
-def add_dataset_entry(dataset,description,features,samples,username,filename,size):
-	print('db@add_dataset_entry')
-	conn, cur = connection()
-
-	sql = "insert into datasets(name,file_name,size,description,features,samples,author) values('"+dataset+"','"+filename+"',"+str(size)+",'"+description+"',"+features+","+samples+",'"+username+"')"
-
-	cur.execute(sql)
-	print("db@add_dataset_entry : Adding Entry")
 	# if you are writing to db then commit and close required
 	conn.commit()
 	conn.close()
 
-	return True	
+	return "file created successfully"
 
+def add_content(filename, parent, content):
+	if not check_dir(filename,parent):
+		return "file not exist"
 
-def my_datasets(username):
 	conn, cur = connection()
 
-	sql = """SELECT * FROM datasets where author = %s"""
-	args = (username)
+	sql = """update bucket set file = %s where node = %s and parent = %s"""
+
+	args = (content, filename, parent)
 
 	cur.execute(sql,args)
 
-	data = cur.fetchall()
-
-	return data
-
-def network(id):
-	conn, cur = connection()
-
-	sql = "SELECT * FROM networks where net_id = " + str(id)
-
-	cur.execute(sql)
-
-	data = cur.fetchall()
-	print(data)
-	for i in data:
-		return (i[1],i[2]) #username and filename
-
-def dataset(id):
-	conn, cur = connection()
-
-	sql = "SELECT * FROM datasets where dataset_id = " + str(id)
-	cur.execute(sql)
-
-	data = cur.fetchall()
-	print(data)
-	for i in data:
-		return i[2] #username and filename
-
-def remove_network(username,id):
-	conn, cur = connection()
-
-	sql = "DELETE FROM networks WHERE net_id = " + str(id)
-	cur.execute(sql)
+	# if you are writing to db then commit and close required
 	conn.commit()
 	conn.close()
 
-def remove_dataset(username,id):
-	conn, cur = connection()
-
-	sql = "DELETE FROM datasets WHERE dataset_id = " + str(id)
-	cur.execute(sql)
-	conn.commit()
-	conn.close()
+	return "content added successfully"

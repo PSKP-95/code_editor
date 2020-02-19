@@ -1,0 +1,17 @@
+{
+    "parent": "XYZ",
+    "children": [
+        {
+            "type": "file",
+            "name": "xyz.cpp"
+        },
+        {
+            "type": "folder",
+            "name": "D"
+        },
+        {
+            "type": "file",
+            "name": "demo.py"
+        }
+    ]
+}

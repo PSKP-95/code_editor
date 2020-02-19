@@ -1,4 +1,4 @@
-from flask import Flask,request,session, redirect,url_for
+from flask import Flask,request,session, redirect
 import json
 from src import db,secure,run
 from flask_cors import CORS
@@ -10,6 +10,43 @@ cors = CORS(app, resources={r"/*": {"origins": "*"}})
 @app.route('/run',methods=['POST','GET'])
 def run_it():
 	return run.run(request.json["code"],request.json["input"],request.json["ext"])
+
+@app.route('/dir',methods=['POST','GET'])
+def dir_content():
+	parent_dir_id = request.json["dir_id"]
+
+	# node_id, node, type, parent
+	return db.get_dir_content(parent_dir_id)
+
+@app.route('/mkdir',methods=['POST','GET'])
+def mkdir():
+	folder = request.json["folder"]
+	parent = request.json["parent"]
+	
+	return db.make_dir(folder,parent)
+
+@app.route('/cat',methods=['POST','GET'])
+def cat():
+	filename = request.json["filename"]
+	parent = request.json["parent"]
+	
+	return db.get_file_content(filename,parent)
+
+@app.route('/touch',methods=['POST','GET'])
+def touch():
+	filename = request.json["filename"]
+	parent = request.json["parent"]
+	content = request.json["content"]
+	
+	return db.create_file(filename,parent,content)
+
+@app.route('/edit',methods=['POST','GET'])
+def edit():
+	filename = request.json["filename"]
+	parent = request.json["parent"]
+	content = request.json["content"]
+	
+	return db.add_content(filename,parent,content)
 
 @app.route('/',methods=['POST','GET'])
 def index():
