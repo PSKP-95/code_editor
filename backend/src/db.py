@@ -114,7 +114,7 @@ def make_dir(folder, parent):
 def get_file_content(filename,parent):
 	conn, cur = connection()
 
-	sql = "select file from bucket where parent = %s and node = %s"
+	sql = "select * from bucket where parent = %s and node = %s"
 
 	args = (parent,filename)
 
@@ -125,7 +125,23 @@ def get_file_content(filename,parent):
 	conn.close()
 	if len(data) == 0:
 		return "file not found"
-	return data[0][0]
+	return json.dumps(data[0])
+
+def get_file_content_from_id(file_id):
+	conn, cur = connection()
+
+	sql = "select file, node from bucket where node_id = %s"
+
+	args = (file_id)
+
+	cur.execute(sql,args)
+	data = cur.fetchall()
+	
+	conn.commit()
+	conn.close()
+	if len(data) == 0:
+		return "file not found"
+	return data[0]
 
 def create_file(filename, parent, content):
 	if check_dir(filename,parent):
@@ -162,3 +178,49 @@ def add_content(filename, parent, content):
 	conn.close()
 
 	return "content added successfully"
+
+def add_testcase(file_id, input_data, output):
+	conn, cur = connection()
+
+	sql = """insert into tests(type, input, output, node_id) values(0, %s, %s, %s)"""
+
+	args = (input_data, output, file_id)
+
+	cur.execute(sql,args)
+
+	# if you are writing to db then commit and close required
+	conn.commit()
+	conn.close()
+
+	return "testcase added successfully"
+
+
+def load_testcases(file_id):
+	conn, cur = connection()
+
+	sql = "select * from tests where node_id = %s"
+
+	args = (file_id)
+
+	cur.execute(sql,args)
+	data = cur.fetchall()
+	
+	conn.commit()
+	conn.close()
+
+	return json.dumps(data)
+
+def change_testcase_status(test_id, status):
+	conn, cur = connection()
+
+	sql = """update tests set status = %s where test_id= %s"""
+
+	args = (status, test_id)
+
+	cur.execute(sql,args)
+
+	# if you are writing to db then commit and close required
+	conn.commit()
+	conn.close()
+
+	return True

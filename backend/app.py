@@ -48,6 +48,27 @@ def edit():
 	
 	return db.add_content(filename,parent,content)
 
+@app.route('/addtest',methods=['POST','GET'])
+def addtest():
+	file_id = request.json["node_id"]
+	input_data = request.json["input"]
+	output = request.json["output"]
+	
+	return db.add_testcase(file_id,input_data,output)
+
+@app.route('/loadtests',methods=['POST','GET'])
+def loadtests():
+	file_id = request.json["node_id"]
+	
+	return db.load_testcases(file_id)
+
+@app.route('/runtests',methods=['POST','GET'])
+def runtests():
+	file_id = request.json["node_id"]
+	parent = request.json["parent"]
+	
+	return run.run_testcases(file_id,parent)
+
 @app.route('/',methods=['POST','GET'])
 def index():
 	(flag, username) = secure.check_session(session)   # check session for user's login

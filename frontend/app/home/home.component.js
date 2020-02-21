@@ -64,6 +64,7 @@ angular.
         this.parent = "root";
         this.children = [];
         this.openfile = "";
+        this.openfile_id = -1;
         $http({
             url: 'http://127.0.0.1:8888/dir',
             method: "POST",
@@ -86,6 +87,7 @@ angular.
 
         this.loadFile = function(node) {
             this.openfile = node;
+            this.openfile_id = node[0];
             $http({
                 url: 'http://127.0.0.1:8888/cat',
                 method: "POST",
@@ -94,9 +96,11 @@ angular.
                     'parent': node[3]
                 }
             }).then(function(response) {
-                self.code = response.data;
+                self.code = response.data[3];
+                self.openfile_id = response.data[0];
                 editAreaLoader.setValue("code",self.code);
             });
+            this.loadAllTestCases();
         }
 
         this.back = function() {
@@ -164,6 +168,65 @@ angular.
                 });
             } else {
                 this.createFile(editAreaLoader.getValue("code"));
+            }
+        }
+
+        // testcases
+        this.testcases = [];
+        this.addTestCase = function() {
+            if(this.openfile != ""){
+                $http({
+                    url: 'http://127.0.0.1:8888/addtest',
+                    method: "POST",
+                    data: {
+                        "node_id": this.openfile_id,
+                        "input": this.input,
+                        "output": this.output
+                    }
+                }).then(function(response) {
+                    alert(response.data);
+                    self.loadAllTestCases();
+                });
+            } else {
+                console.log("Open/create file first");
+            }
+        }
+
+        // loads all testcases of current file or when file loaded testcases get loaded
+        this.loadAllTestCases = function() {
+            if(this.openfile != ""){
+                $http({
+                    url: 'http://127.0.0.1:8888/loadtests',
+                    method: "POST",
+                    data: {
+                        "node_id": this.openfile_id,
+                    }
+                }).then(function(response) {
+                    self.testcases = response.data;
+                    console.log(response.data);
+                });
+            }
+        }
+
+        this.showTest = function(test) {
+            this.input = test[2];
+            this.output = test[3];
+        }
+
+        this.runOnTestCases = function() {
+            if(this.testcases.length > 0){
+                $http({
+                    url: 'http://127.0.0.1:8888/runtests',
+                    method: "POST",
+                    data: {
+                        "node_id": this.openfile_id,
+                        "parent": this.openfile[3]
+                    }
+                }).then(function(response) {
+                    self.testcases = response.data;
+                });
+            } else {
+                alert("Testcases not available");
             }
         }
     }]

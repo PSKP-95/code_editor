@@ -1,7 +1,10 @@
 <div class="ribbon">
-  <i ng-click="$ctrl.createFile('')" class="fas fa-file-medical"></i>
-  <i ng-click="$ctrl.createDir()" class="fas fa-folder-plus"></i>
-  <i ng-click="$ctrl.saveFile()" class="fas fa-save"></i>
+  
+  <i title="Create File" ng-click="$ctrl.createFile('')" class="fas fa-file-medical"></i>
+  <i title="Create Directory" ng-click="$ctrl.createDir()" class="fas fa-folder-plus"></i>
+  <i title="Save File" ng-click="$ctrl.saveFile()" class="fas fa-save"></i>
+  <i title="Add Test Case" ng-click="$ctrl.addTestCase()" class="fas fa-plus-circle"></i>
+  <i Title="Run Test Cases" ng-click="$ctrl.runOnTestCases()" class="fas fa-play"></i>
 
   <select class="btn btn-primary" id="ext" ng-change="$ctrl.langChange()" ng-model="$ctrl.ext">
     <option value=".cpp">CPP</option>
@@ -40,7 +43,13 @@
         </tbody>
       </table>
       <div class="testcase">
-
+        <ol>
+          <li ng-repeat="test in $ctrl.testcases" ng-click="$ctrl.showTest(test)">
+            <i ng-if="test[5] == 0" style="color: blue;" class="fas fa-question-circle"></i>
+            <i ng-if="test[5] == 1" style="color: green;" class="fas fa-check-circle"></i>
+            <i ng-if="test[5] == 2" style="color: rgb(255, 0, 0);" class="fas fa-times-circle"></i> Test {{$index}} 
+          </li>
+        </ol>
       </div>
     </div>
     
@@ -49,7 +58,7 @@
     <textarea class="language-cpp" id="code" name="code" cols="30" rows="10"></textarea>
     <div class="io">
       <textarea placeholder="Paste Input Here" name="input" id="input" cols="20" rows="10" ng-model="$ctrl.input">{{$ctrl.input}}</textarea>
-    <textarea placeholder="Output Shows Here" name="output" id="output" cols="20" rows="10" ng-model="$ctrl.output" readonly>{{$ctrl.output}}</textarea>
+    <textarea placeholder="Output Shows Here" name="output" id="output" cols="20" rows="10" ng-model="$ctrl.output">{{$ctrl.output}}</textarea>
     </div>
   </div>
 </div>
