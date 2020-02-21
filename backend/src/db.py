@@ -63,7 +63,7 @@ def get_dir_content(dir_id):
 
 	conn, cur = connection()
 
-	sql = "select node_id, node, type, parent from bucket where parent = %s"
+	sql = "select node_id, node, type, parent from bucket where parent = %s order by node"
 
 	args = (dir_id)
 

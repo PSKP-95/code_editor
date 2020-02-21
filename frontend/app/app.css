@@ -23,7 +23,6 @@ textarea,pre {
     overflow-y: scroll;
 }
 
-
 .table-ex {
     width: 100%;
     display: block;
@@ -73,6 +72,21 @@ textarea,pre {
     width: 100vw;
     height: 5vh;
     padding: 10px;
+}
+
+.menu{
+    font-size: 28px;
+    padding: 3px;
+    border: 2px solid black;
+}
+
+.clickable:hover {
+    cursor: pointer;
+}
+
+.ribbon select{
+    padding: 4px;
+    border: 2px solid black;
 }
 
 .codepane {

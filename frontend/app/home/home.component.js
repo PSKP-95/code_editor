@@ -14,7 +14,6 @@ angular.
         this.output = "";   // output data
         this.ext = ".cpp";   // default extension
         this.code = "";
-
         // running code
         this.runcode = function() {
             $http({
@@ -154,6 +153,7 @@ angular.
         }
 
         this.saveFile = function() {
+            this.code = editAreaLoader.getValue("code");
             if(this.openfile != ""){
                 $http({
                     url: 'http://127.0.0.1:8888/edit',
@@ -161,7 +161,7 @@ angular.
                     data: {
                         "filename": this.openfile[2],
                         "parent": this.openfile[3],
-                        "content": editAreaLoader.getValue("code")
+                        "content": this.code
                     }
                 }).then(function(response) {
                     alert(response.data);
@@ -214,6 +214,13 @@ angular.
         }
 
         this.runOnTestCases = function() {
+            if(this.code != editAreaLoader.getValue("code")){
+                alert("file not saved");
+                return;
+            }
+            for(var i=0;i<this.testcases.length;i++){
+                this.testcases[i][5] = -1;
+            }
             if(this.testcases.length > 0){
                 $http({
                     url: 'http://127.0.0.1:8888/runtests',

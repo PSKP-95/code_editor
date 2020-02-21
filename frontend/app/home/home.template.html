@@ -1,18 +1,19 @@
-<div class="ribbon">
-  
-  <i title="Create File" ng-click="$ctrl.createFile('')" class="fas fa-file-medical"></i>
-  <i title="Create Directory" ng-click="$ctrl.createDir()" class="fas fa-folder-plus"></i>
-  <i title="Save File" ng-click="$ctrl.saveFile()" class="fas fa-save"></i>
-  <i title="Add Test Case" ng-click="$ctrl.addTestCase()" class="fas fa-plus-circle"></i>
-  <i Title="Run Test Cases" ng-click="$ctrl.runOnTestCases()" class="fas fa-play"></i>
 
-  <select class="btn btn-primary" id="ext" ng-change="$ctrl.langChange()" ng-model="$ctrl.ext">
+  <div class="ribbon">
+    
+  <i title="Create File" ng-click="$ctrl.createFile('')" class="fas fa-file-medical menu clickable"></i>
+  <i title="Create Directory" ng-click="$ctrl.createDir()" class="fas fa-folder-plus menu clickable"></i>
+  <i title="Save File" ng-click="$ctrl.saveFile()" class="fas fa-save menu clickable"></i>
+  <i title="Add Test Case" ng-click="$ctrl.addTestCase()" class="fas fa-plus-circle menu clickable"></i>
+  <i Title="Run Test Cases" ng-click="$ctrl.runOnTestCases()" class="fas fa-play-circle menu clickable"></i>
+  <i Title="Run Code in editor" ng-click="$ctrl.runcode()" class="fa fa-play menu clickable" aria-hidden="true"></i>
+
+  <select id="ext" ng-change="$ctrl.langChange()" ng-model="$ctrl.ext">
     <option value=".cpp">CPP</option>
     <option value=".py">Python</option>
     <option value=".c">C</option>
   </select>
-  <button class="btn btn-success" ng-click="$ctrl.runcode()"><i class="fa fa-play" aria-hidden="true"></i>
-  </button>
+  
 
   
 </div>
@@ -20,7 +21,7 @@
 <div class="container-block">
   <div class="explorer">
     <div class="controls" >
-      <div style="flex: 10%;" ng-click="$ctrl.back()"><i class="fa fa-arrow-left" aria-hidden="true"></i>
+      <div class="clickable" style="flex: 10%;" ng-click="$ctrl.back()"><i class="fa fa-arrow-left" aria-hidden="true"></i>
       </div>
       <div style="flex: 80%;">{{$ctrl.parent}}</div>
       <div style="flex: 10%;"><i class="fa fa-times" aria-hidden="true"></i>
@@ -35,7 +36,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr ng-repeat="child in $ctrl.children" ng-click="$ctrl.loadDir(child)" ng-model="$ctrl.children">
+          <tr class="clickable" ng-repeat="child in $ctrl.children" ng-click="$ctrl.loadDir(child)" ng-model="$ctrl.children">
             <td ng-if="child[2] == 0"><i class="fas fa-file"></i></td>
             <td ng-if="child[2] == 1"><i class="fas fa-folder"></i></td>
             <td>{{child[1]}}</td>
@@ -44,7 +45,8 @@
       </table>
       <div class="testcase">
         <ol>
-          <li ng-repeat="test in $ctrl.testcases" ng-click="$ctrl.showTest(test)">
+          <li class="clickable" ng-repeat="test in $ctrl.testcases" ng-click="$ctrl.showTest(test)">
+            <i ng-if="test[5] == -1" class="fas fa-clock"></i>
             <i ng-if="test[5] == 0" style="color: blue;" class="fas fa-question-circle"></i>
             <i ng-if="test[5] == 1" style="color: green;" class="fas fa-check-circle"></i>
             <i ng-if="test[5] == 2" style="color: rgb(255, 0, 0);" class="fas fa-times-circle"></i> Test {{$index}} 
