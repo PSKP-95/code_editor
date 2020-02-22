@@ -6,7 +6,23 @@ angular.
   component('home', {
     templateUrl: 'home/home.template.html',
     controller: ['$http','$window','$rootScope', function homeController($http,$window,$rootScope) {
-        
+        toastr.options = {
+            "closeButton": true,
+            "debug": false,
+            "newestOnTop": true,
+            "progressBar": true,
+            "positionClass": "toast-top-right",
+            "preventDuplicates": false,
+            "onclick": null,
+            "showDuration": "300",
+            "hideDuration": "1000",
+            "timeOut": "5000",
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        }
         // for getting access in http request
         var self = this;
 
@@ -63,6 +79,7 @@ angular.
         this.parent = "root";
         this.children = [];
         this.openfile = "";
+        this.openfile_path = "";
         this.openfile_id = -1;
         $http({
             url: 'http://127.0.0.1:8888/dir',
@@ -87,6 +104,11 @@ angular.
         this.loadFile = function(node) {
             this.openfile = node;
             this.openfile_id = node[0];
+            this.openfile_path = "";
+            for(var i=0;i<this.stack.length;i++){
+                this.openfile_path += this.stack[i][0] + "/";
+            }
+            this.openfile_path += node[1];
             $http({
                 url: 'http://127.0.0.1:8888/cat',
                 method: "POST",
@@ -99,6 +121,7 @@ angular.
                 self.openfile_id = response.data[0];
                 editAreaLoader.setValue("code",self.code);
                 self.loadAllTestCases();
+                toastr["success"]("File Loading Successful.", "File");
             });
         }
 
@@ -135,6 +158,7 @@ angular.
             }).then(function(response) {
                 alert(response.data);
                 self.loadDirUsingId(self.parent_id);  // refresh directory
+                toastr["success"]("File Creation Successful.", "File");
             });
         }
 
@@ -149,12 +173,12 @@ angular.
             }).then(function(response) {
                 alert(response.data);
                 self.loadDirUsingId(self.parent_id);  // refresh directory
+                toastr["success"]("Directory Created Successfully.", "Folder");
             });
         }
 
         this.saveFile = function() {
             this.code = editAreaLoader.getValue("code");
-            console.log(this.openfile);
             if(this.openfile != ""){
                 $http({
                     url: 'http://127.0.0.1:8888/edit',
@@ -165,7 +189,7 @@ angular.
                         "content": this.code
                     }
                 }).then(function(response) {
-                    alert(response.data);
+                    toastr["success"]("File Saved Successfully", "File");
                 });
             } else {
                 this.createFile(editAreaLoader.getValue("code"));
@@ -185,11 +209,11 @@ angular.
                         "output": this.output
                     }
                 }).then(function(response) {
-                    alert(response.data);
                     self.loadAllTestCases();
+                    toastr["success"]("Testcases", "Testcases Added Successfully.");
                 });
             } else {
-                console.log("Open/create file first");
+                toastr["info"]("Open / Create File First.", "Testcases");
             }
         }
 
@@ -204,7 +228,6 @@ angular.
                     }
                 }).then(function(response) {
                     self.testcases = response.data;
-                    console.log(response.data);
                 });
             }
         }
@@ -234,7 +257,7 @@ angular.
                     self.testcases = response.data;
                 });
             } else {
-                alert("Testcases not available");
+                toastr["error"]("Testcases not available", "Testcases");
             }
         }
     }]
