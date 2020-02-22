@@ -32,6 +32,7 @@ angular.
         this.code = "";
         // running code
         this.runcode = function() {
+            this.output = "running";
             $http({
                 url: 'http://127.0.0.1:8888/run',
                 method: "POST",
