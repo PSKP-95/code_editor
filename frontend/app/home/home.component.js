@@ -98,8 +98,8 @@ angular.
                 self.code = response.data[3];
                 self.openfile_id = response.data[0];
                 editAreaLoader.setValue("code",self.code);
+                self.loadAllTestCases();
             });
-            this.loadAllTestCases();
         }
 
         this.back = function() {
@@ -154,12 +154,13 @@ angular.
 
         this.saveFile = function() {
             this.code = editAreaLoader.getValue("code");
+            console.log(this.openfile);
             if(this.openfile != ""){
                 $http({
                     url: 'http://127.0.0.1:8888/edit',
                     method: "POST",
                     data: {
-                        "filename": this.openfile[2],
+                        "filename": this.openfile[1],
                         "parent": this.openfile[3],
                         "content": this.code
                     }

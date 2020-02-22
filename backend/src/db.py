@@ -162,6 +162,7 @@ def create_file(filename, parent, content):
 	return "file created successfully"
 
 def add_content(filename, parent, content):
+	print("Ho",filename,parent)
 	if not check_dir(filename,parent):
 		return "file not exist"
 

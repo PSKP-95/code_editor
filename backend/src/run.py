@@ -9,10 +9,14 @@ def run(code,input,ext):
 
     foutput = ''.join(random.choices(string.ascii_uppercase + string.digits, k = 7)) + ".txt" 
 
-    os.system(get_command(fcode, finput, foutput, ext))
+    commands = get_command(fcode, finput, foutput, ext)
 
-    with open(foutput, "r") as f:
-        data = f.read()
+    for i in commands:
+        os.system(i)
+        with open(foutput, "r") as f:
+            data = f.read()
+        if data != "":
+            break
 
     delete_files(fcode, finput, foutput)
 
@@ -20,11 +24,11 @@ def run(code,input,ext):
     
 def get_command(fcode,finput,foutput,ext):
     if ext == '.py':
-        return "python " + fcode + " < " + finput + " > " + foutput
+        return ["python " + fcode + " < " + finput + " > " + foutput + " 2>&1 "]
     elif ext == '.cpp':
-        return "g++ " + fcode + " && ./a.out < " + finput + " > " + foutput
+        return ["g++ " + fcode + " 2> " + foutput, "./a.out < " + finput + " > " + foutput + " 2>&1 "]
     elif ext == ".c":
-        return "gcc " + fcode + " && ./a.out < " + finput + " > " + foutput
+        return ["gcc " + fcode + " 2> " + foutput, "./a.out < " + finput + " > " + foutput + " 2>&1 "]
 
 def create_files(code, input_file, ext):
     fcode = ''.join(random.choices(string.ascii_uppercase + string.digits, k = 7)) 
