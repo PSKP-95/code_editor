@@ -36,22 +36,19 @@ angular.
             $http({
                 url: 'http://127.0.0.1:8888/run',
                 method: "POST",
-                data: { 'code' : editAreaLoader.getValue("code"),
+                data: { 'code' : this.editor.getValue("code"),
                         'input': this.input, 
                         'ext': this.ext }
             }).then(function(response) {
                 self.output = response["data"];
             });
         }
-
+        
         // codearea
-        editAreaLoader.init({
-            id : "code",		
-            syntax: "cpp",			
-            start_highlight: true,
-            allow_toggle: false,
-            replace_tab_by_spaces: 4	
-        });  
+        this.editor = monaco.editor.create(document.getElementById('code'), {
+            value: "",
+            language: 'cpp'
+        });
 
         this.filetype = "cpp";
         this.langChange = function() {
@@ -62,13 +59,7 @@ angular.
             } else {
                 this.filetype = "c";
             }
-            editAreaLoader.init({
-                id : "code",		
-                syntax: this.filetype,		
-                start_highlight: true,
-                allow_toggle: false,
-                replace_tab_by_spaces: 4	
-            }); 
+            monaco.editor.setModelLanguage(this.editor.getModel(),this.filetype);
         }
         
         // explorer
@@ -120,7 +111,7 @@ angular.
             }).then(function(response) {
                 self.code = response.data[3];
                 self.openfile_id = response.data[0];
-                editAreaLoader.setValue("code",self.code);
+                self.editor.setValue(self.code);
                 self.loadAllTestCases();
                 toastr["success"]("File Loading Successful.", "File");
             });
@@ -157,7 +148,6 @@ angular.
                     "content": content
                 }
             }).then(function(response) {
-                alert(response.data);
                 self.loadDirUsingId(self.parent_id);  // refresh directory
                 toastr["success"]("File Creation Successful.", "File");
             });
@@ -172,14 +162,14 @@ angular.
                     "parent": this.parent_id,
                 }
             }).then(function(response) {
-                alert(response.data);
                 self.loadDirUsingId(self.parent_id);  // refresh directory
                 toastr["success"]("Directory Created Successfully.", "Folder");
             });
         }
-
+        
         this.saveFile = function() {
-            this.code = editAreaLoader.getValue("code");
+            this.code = this.editor.getValue("code");
+            console.log(this.code);
             if(this.openfile != ""){
                 $http({
                     url: 'http://127.0.0.1:8888/edit',
@@ -193,13 +183,17 @@ angular.
                     toastr["success"]("File Saved Successfully", "File");
                 });
             } else {
-                this.createFile(editAreaLoader.getValue("code"));
+                this.createFile(this.editor.getValue("code"));
             }
         }
-
+        
         // testcases
         this.testcases = [];
         this.addTestCase = function() {
+            if(this.input == ""  && this.output == ""){
+                toastr["error"]("Both input and output empty.", "Testcases");
+                return;
+            }
             if(this.openfile != ""){
                 $http({
                     url: 'http://127.0.0.1:8888/addtest',
@@ -211,7 +205,7 @@ angular.
                     }
                 }).then(function(response) {
                     self.loadAllTestCases();
-                    toastr["success"]("Testcases", "Testcases Added Successfully.");
+                    toastr["success"]("Testcases Added Successfully.", "Testcases");
                 });
             } else {
                 toastr["info"]("Open / Create File First.", "Testcases");
@@ -239,8 +233,8 @@ angular.
         }
 
         this.runOnTestCases = function() {
-            if(this.code != editAreaLoader.getValue("code")){
-                alert("file not saved");
+            if(this.code != this.editor.getValue("code")){
+                toastr["error"]("File not saved", "File");
                 return;
             }
             for(var i=0;i<this.testcases.length;i++){
