@@ -13,6 +13,11 @@
     <option value=".py">Python</option>
     <option value=".c">C</option>
   </select>
+  <select id="theme" ng-change="$ctrl.themeChange()" ng-model="$ctrl.theme">
+    <option value="vs">Bright</option>
+    <option value="vs-dark">Dark</option>
+    <option value="hc-black">Black</option>
+  </select>
   <i ng-if="$ctrl.openfile != ''" style="border: 1px solid black;padding: 5px;" class="fas fa-book-open"> {{$ctrl.openfile_path}}</i>
 
 </div>

@@ -47,6 +47,7 @@ angular.
         // codearea
         this.editor = monaco.editor.create(document.getElementById('code'), {
             value: "",
+            theme: "vs-dark",
             language: 'cpp'
         });
 
@@ -62,6 +63,10 @@ angular.
             monaco.editor.setModelLanguage(this.editor.getModel(),this.filetype);
         }
         
+        this.theme = "vs-dark";
+        this.themeChange = function(){
+            monaco.editor.setTheme(this.theme);
+        }
         // explorer
 
         // stack for point current and its path
@@ -139,11 +144,14 @@ angular.
 
         // creat new file in current directory
         this.createFile = function(content) {
+            var filename = prompt("Enter Filename");
+            if(filename == null)
+                return;
             $http({
                 url: 'http://127.0.0.1:8888/touch',
                 method: "POST",
                 data: {
-                    "filename": prompt("Enter Filename",""),
+                    "filename": filename,
                     "parent": this.parent_id,
                     "content": content
                 }
@@ -167,9 +175,18 @@ angular.
             });
         }
         
+        // ctrl + s
+        document.addEventListener("keydown", function(e) {
+            if ((window.navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey)  && e.keyCode == 83) {
+              e.preventDefault();
+              self.saveFile();
+              // Process the event here (such as click on submit button)
+            }
+        }, false);
+
         this.saveFile = function() {
             this.code = this.editor.getValue("code");
-            console.log(this.code);
+            
             if(this.openfile != ""){
                 $http({
                     url: 'http://127.0.0.1:8888/edit',
