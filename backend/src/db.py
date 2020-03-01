@@ -1,8 +1,15 @@
 import pymysql, hashlib, json
+import sqlite3
+
+DATABASE = "sqlite3"
 
 def connection():
-	conn = pymysql.connect('localhost','root','','code_rtc')
-	cur = conn.cursor()
+	if DATABASE == "mysql":
+		conn = pymysql.connect('https://99.000webhost.io','id12766381_root','pskp@a95a','id12766381_code_rtc')
+		cur = conn.cursor()
+	elif DATABASE == "sqlite3":
+		conn = sqlite3.connect("code_RTC.db")
+		cur = conn.cursor()
 	return (conn,cur)
 
 def get_SHA256(password):
@@ -13,7 +20,11 @@ def get_SHA256(password):
 # 
 def check_record(username,password):
 	conn,cur = connection()
+
 	sql = """SELECT * FROM users where username = %s and password = %s"""
+
+	if DATABASE == "sqlite3":
+		sql = sql.replace("%s","?")
 
 	password = get_SHA256(password)
 
@@ -64,9 +75,10 @@ def get_dir_content(dir_id):
 	conn, cur = connection()
 
 	sql = "select node_id, node, type, parent from bucket where parent = %s order by node"
-
-	args = (dir_id)
-
+	if DATABASE == "sqlite3":
+		sql = sql.replace("%s","?")
+	args = (dir_id,)
+	
 	cur.execute(sql,args)
 	data = cur.fetchall()
 
@@ -80,6 +92,8 @@ def check_dir(folder,parent):
 
 	sql = "select * from bucket where parent = %s and node = %s"
 
+	if DATABASE == "sqlite3":
+		sql = sql.replace("%s","?")
 	args = (parent,folder)
 
 	cur.execute(sql,args)
@@ -101,6 +115,9 @@ def make_dir(folder, parent):
 
 	sql = """insert into bucket(type,node,file,parent) values(1,%s,"",%s)""" # type = 1 means folder
 
+	if DATABASE == "sqlite3":
+		sql = sql.replace("%s","?")
+
 	args = (folder, parent)
 
 	cur.execute(sql,args)
@@ -115,6 +132,9 @@ def get_file_content(filename,parent):
 	conn, cur = connection()
 
 	sql = "select * from bucket where parent = %s and node = %s"
+
+	if DATABASE == "sqlite3":
+		sql = sql.replace("%s","?")
 
 	args = (parent,filename)
 
@@ -132,7 +152,10 @@ def get_file_content_from_id(file_id):
 
 	sql = "select file, node from bucket where node_id = %s"
 
-	args = (file_id)
+	if DATABASE == "sqlite3":
+		sql = sql.replace("%s","?")
+	
+	args = (file_id,)
 
 	cur.execute(sql,args)
 	data = cur.fetchall()
@@ -150,6 +173,9 @@ def create_file(filename, parent, content):
 	conn, cur = connection()
 
 	sql = """insert into bucket(type,node,file,parent) values(0,%s,%s,%s)""" # type = 1 means folder
+
+	if DATABASE == "sqlite3":
+		sql = sql.replace("%s","?")
 
 	args = (filename,content, parent)
 
@@ -170,6 +196,10 @@ def add_content(filename, parent, content):
 
 	sql = """update bucket set file = %s where node = %s and parent = %s"""
 
+	if DATABASE == "sqlite3":
+		sql = sql.replace("%s","?")
+
+
 	args = (content, filename, parent)
 
 	cur.execute(sql,args)
@@ -185,6 +215,9 @@ def add_testcase(file_id, input_data, output):
 
 	sql = """insert into tests(type, input, output, node_id) values(0, %s, %s, %s)"""
 
+	if DATABASE == "sqlite3":
+		sql = sql.replace("%s","?")
+	
 	args = (input_data, output, file_id)
 
 	cur.execute(sql,args)
@@ -201,7 +234,10 @@ def load_testcases(file_id):
 
 	sql = "select * from tests where node_id = %s"
 
-	args = (file_id)
+	if DATABASE == "sqlite3":
+		sql = sql.replace("%s","?")
+		
+	args = (file_id,)
 
 	cur.execute(sql,args)
 	data = cur.fetchall()
@@ -216,6 +252,9 @@ def change_testcase_status(test_id, status):
 
 	sql = """update tests set status = %s where test_id= %s"""
 
+	if DATABASE == "sqlite3":
+		sql = sql.replace("%s","?")
+	
 	args = (status, test_id)
 
 	cur.execute(sql,args)
