@@ -74,7 +74,7 @@ def get_dir_content(dir_id):
 
 	conn, cur = connection()
 
-	sql = "select node_id, node, type, parent from bucket where parent = %s order by node"
+	sql = "select node_id, node, type, parent, flag from bucket where parent = %s order by node"
 	if DATABASE == "sqlite3":
 		sql = sql.replace("%s","?")
 	args = (dir_id,)
@@ -264,3 +264,32 @@ def change_testcase_status(test_id, status):
 	conn.close()
 
 	return True
+
+# 1:AC, 2:WA, 3:TLE 4:RE
+def change_file_flag(file_id, flag):
+	conn, cur = connection()
+
+	if flag == "AC":
+		flag = 1
+	elif flag == "WA":
+		flag = 2
+	elif flag == "TLE":
+		flag = 3
+	elif flag == "RE":
+		flag = 4
+
+	sql = """update bucket set flag = %s where node_id= %s"""
+
+	if DATABASE == "sqlite3":
+		sql = sql.replace("%s","?")
+	
+	args = (flag, file_id)
+	try:
+		cur.execute(sql,args)	
+	except:
+		return "fail"
+	finally:
+		# if you are writing to db then commit and close required
+		conn.commit()
+		conn.close()
+	return "success"

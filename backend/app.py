@@ -69,6 +69,13 @@ def runtests():
 	
 	return run.run_testcases(file_id,parent)
 
+@app.route('/updateflag',methods=['POST','GET'])
+def updateflag():
+	file_id = request.json["node_id"]
+	flag = request.json["flag"]
+	
+	return db.change_file_flag(file_id,flag)
+
 @app.route('/',methods=['POST','GET'])
 def index():
 	(flag, username) = secure.check_session(session)   # check session for user's login

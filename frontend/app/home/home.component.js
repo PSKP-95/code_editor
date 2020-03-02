@@ -116,6 +116,15 @@ angular.
             }).then(function(response) {
                 self.code = response.data[3];
                 self.openfile_id = response.data[0];
+                
+                if(response.data[5] == 1)
+                    self.flag = "AC";
+                else if(response.data[5] == 2)
+                    self.flag = "WA";
+                else if(response.data[5] == 3)
+                    self.flag = "TLE";
+                else if(response.data[5] == 4)
+                    self.flag = "RE";
                 self.editor.setValue(self.code);
                 self.loadAllTestCases();
                 toastr["success"]("File Loading Successful.", "File");
@@ -270,6 +279,27 @@ angular.
                 });
             } else {
                 toastr["error"]("Testcases not available", "Testcases");
+            }
+        }
+
+        // flag for AC, WA, TLE, RE
+        this.flag = null;
+        this.flagChange = function() {
+            if(this.openfile != ""){
+                $http({
+                    url: 'http://127.0.0.1:8888/updateflag',
+                    method: "POST",
+                    data: {
+                        "node_id": this.openfile_id,
+                        "flag": this.flag
+                    }
+                }).then(function(response) {
+                    if(response.data == "success")
+                        toastr["success"]("verdict changed", "File");
+                    else 
+                        toastr["error"]("verdict not changed", "File");
+                    self.loadDirUsingId(self.parent_id);  // refresh directory
+                });
             }
         }
     }]
