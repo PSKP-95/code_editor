@@ -112,3 +112,11 @@ textarea,pre {
     flex: 50%;
     height: 20vh;
 }
+
+#searchbox{
+    z-index: 1;
+    top: 30px;
+    width: 20%;
+    position: absolute;
+}
+

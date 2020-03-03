@@ -29,11 +29,16 @@
 </div>
 <hr>
 <div class="container-block">
+  
   <div class="explorer">
+    <div id="searchbox"><input placeholder="Search" class="form-control" type="Search" ng-model="$ctrl.query"></div>
+    
     <div class="controls" >
+      
       <div title="Go Back" class="clickable" style="flex: 10%;" ng-click="$ctrl.back()"><i class="fa fa-arrow-left" aria-hidden="true"></i>
       </div>
-      <div style="flex: 80%;">{{$ctrl.parent}}</div>
+      <div style="flex: 70%;">{{$ctrl.parent}}</div>
+      <div ng-click="$ctrl.search()" style="flex: 10%;"><i class="fa fa-search" aria-hidden="true"></i></div>
       <div style="flex: 10%;"><i class="fa fa-times" aria-hidden="true"></i>
       </div>
     </div>
@@ -46,7 +51,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr class="clickable" ng-repeat="child in $ctrl.children" ng-click="$ctrl.loadDir(child)" ng-model="$ctrl.children">
+          <tr class="clickable" ng-repeat="child in $ctrl.children | filter:$ctrl.query" ng-click="$ctrl.loadDir(child)" ng-model="$ctrl.children">
             <td ng-if="child[2] == 0"><i class="fas fa-file"></i></td>
             <td ng-if="child[2] == 1"><i class="fas fa-folder"></i></td>
             <td ng-if="child[4] == 1" style="color: green;">{{child[1]}}</td>

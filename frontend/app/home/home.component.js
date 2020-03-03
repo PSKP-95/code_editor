@@ -302,5 +302,21 @@ angular.
                 });
             }
         }
+
+        this.query;
+        this.searchbox = "none";
+        $("#searchbox").css("display",this.searchbox);
+        // search within folder
+        this.search = function() {
+            if(this.searchbox == "none"){
+                this.searchbox = "block";
+                $("#searchbox").css("display",this.searchbox);
+            } else {
+                this.searchbox = "none";
+                this.query = "";
+                $("#searchbox").css("display",this.searchbox);
+            }
+        }
+
     }]
   });
