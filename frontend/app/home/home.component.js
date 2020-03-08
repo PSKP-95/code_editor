@@ -48,7 +48,9 @@ angular.
         this.editor = monaco.editor.create(document.getElementById('code'), {
             value: "",
             theme: "vs-dark",
-            language: 'cpp'
+            language: 'cpp',
+            fontSize: 16,
+            automaticLayout:true
         });
 
         this.filetype = "cpp";
@@ -305,16 +307,16 @@ angular.
 
         this.query;
         this.searchbox = "none";
-        $("#searchbox").css("display",this.searchbox);
+        $(".searchbox").css("display",this.searchbox);
         // search within folder
         this.search = function() {
             if(this.searchbox == "none"){
                 this.searchbox = "block";
-                $("#searchbox").css("display",this.searchbox);
+                $(".searchbox").css("display",this.searchbox);
             } else {
                 this.searchbox = "none";
                 this.query = "";
-                $("#searchbox").css("display",this.searchbox);
+                $(".searchbox").css("display",this.searchbox);
             }
         }
 

@@ -28,10 +28,10 @@
 
 </div>
 <hr>
-<div class="container-block">
+<div class="row">
   
-  <div class="explorer">
-    <div id="searchbox"><input placeholder="Search" class="form-control" type="Search" ng-model="$ctrl.query"></div>
+  <div class="col-lg-2 nopadding">
+    <div id="controls" class="searchbox"><input placeholder="Search" class="form-control" type="Search" ng-model="$ctrl.query"></div>
     
     <div class="controls" >
       
@@ -42,11 +42,12 @@
       <div style="flex: 10%;"><i class="fa fa-times" aria-hidden="true"></i>
       </div>
     </div>
+    
     <div class="table-container">
-      <table class="table-ex">
-        <thead>
+      <table class="table">
+        <thead class="thead-dark">
           <tr>
-            <td></td>
+            <td>#</td>
             <td> File / Folder Names</td>
           </tr>
         </thead>
@@ -60,6 +61,8 @@
           </tr>
         </tbody>
       </table>
+    </div>
+    <div>
       <div class="testcase">
         <ol>
           <li class="clickable" ng-repeat="test in $ctrl.testcases" ng-click="$ctrl.showTest(test)">
@@ -71,9 +74,9 @@
         </ol>
       </div>
     </div>
-    
   </div>
-  <div class="codepane">
+
+  <div class="col-lg-10 nopadding">
     <div id="code"></div>
     <div class="io">
       <textarea placeholder="Paste Input Here" name="input" id="input" cols="20" rows="10" ng-model="$ctrl.input">{{$ctrl.input}}</textarea>
