@@ -1,31 +1,74 @@
 
   <div class="ribbon">
-    
-  <i title="Create File" ng-click="$ctrl.createFile('')" class="fas fa-file-medical menu clickable"></i>
-  <i title="Create Directory" ng-click="$ctrl.createDir()" class="fas fa-folder-plus menu clickable"></i>
-  <i title="Save File" ng-click="$ctrl.saveFile()" class="fas fa-save menu clickable"></i>
-  <i title="Add Test Case" ng-click="$ctrl.addTestCase()" class="fas fa-plus-circle menu clickable"></i>
-  <i Title="Run Test Cases" ng-click="$ctrl.runOnTestCases()" class="fas fa-play-circle menu clickable"></i>
-  <i Title="Run Code in editor" ng-click="$ctrl.runcode()" class="fa fa-play menu clickable" aria-hidden="true"></i>
+    <div class="btn-group">
+      <button class="btn dropdown-toggle" data-toggle="dropdown">
+        File <span class="caret"></span>
+      </button>
+      <table class="dropdown-menu">
+        <tr class="clickable" ng-click="$ctrl.createFile('')">
+          <td><i title="Create File" class="fas fa-file-medical"></i></td>
+          <td>New File</td>
+        </tr>
+        <tr class="clickable" ng-click="$ctrl.createDir()">
+          <td><i title="Create Directory" class="fas fa-folder-plus"></i></td>
+          <td>New Folder</td>
+        </tr>
+        <tr class="clickable" ng-click="$ctrl.saveFile()">
+          <td><i title="Save File" class="fas fa-save"></i></td>
+          <td>Save</td>
+        </tr>
+      </table>
+    </div>
 
-  <select id="ext" ng-change="$ctrl.langChange()" ng-model="$ctrl.ext">
+    <div class="btn-group">
+      <button class="btn dropdown-toggle" data-toggle="dropdown">
+        Testcase <span class="caret"></span>
+      </button>
+      <table class="dropdown-menu">
+        <tr  ng-click="$ctrl.addTestCase()" class="clickable">
+          <td><i title="Add Test Case" class="fas fa-plus-circle"></i></td>
+          <td>Add Testcase</td>
+        </tr>
+        <tr class="clickable"  ng-click="$ctrl.runOnTestCases()">
+          <td><i Title="Run Test Cases" class="fas fa-play-circle"></i></td>
+          <td>Run on Testcases</td>
+        </tr>
+        </table>
+    </div>
+
+    <div class="btn-group">
+      <button class="btn dropdown-toggle" data-toggle="dropdown">
+        Setting <span class="caret"></span>
+      </button>
+      <table class="dropdown-menu">
+        <tr  ng-click="$ctrl.editorSetting()" class="clickable">
+          <td><i title="Add Test Case" class="fa fa-cog"></i></td>
+          <td>Editor Setting</td>
+        </tr>
+        </table>
+    </div>
+
+  <i Title="Run Test Cases" ng-click="$ctrl.runOnTestCases()" class="fas fa-play-circle btn btn-outline-success clickable" aria-hidden="true"></i>
+  <i Title="Run Code in editor" ng-click="$ctrl.runcode()" class="fa fa-play btn btn-outline-danger clickable" aria-hidden="true"></i>
+
+  <select class="btn" id="ext" ng-change="$ctrl.langChange()" ng-model="$ctrl.ext">
     <option value=".cpp">CPP</option>
     <option value=".py">Python</option>
     <option value=".c">C</option>
   </select>
-  <select id="theme" ng-change="$ctrl.themeChange()" ng-model="$ctrl.theme">
+  <select class="btn" id="theme" ng-change="$ctrl.themeChange()" ng-model="$ctrl.theme">
     <option value="vs">Bright</option>
     <option value="vs-dark">Dark</option>
     <option value="hc-black">Black</option>
   </select>
-  <select ng-if="$ctrl.openfile != ''" id="flag" ng-change="$ctrl.flagChange()" ng-model="$ctrl.flag">
+  <select class="btn" ng-if="$ctrl.openfile != ''" id="flag" ng-change="$ctrl.flagChange()" ng-model="$ctrl.flag">
     <option value="AC">AC</option>
     <option value="WA">WA</option>
     <option value="TLE">TLE</option>
     <option value="RE">RE</option>
   </select>
-  <i ng-if="$ctrl.openfile != ''" style="border: 1px solid black;padding: 5px;" class="fas fa-book-open"> {{$ctrl.openfile_path}}</i>
-
+  <i ng-if="$ctrl.openfile != ''" style="border: 1px solid black;padding: 5px;" class="fas fa-book-open btn"> {{$ctrl.openfile_path}}</i>
+  
 </div>
 <hr>
 <div class="row">
@@ -52,7 +95,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr class="clickable" ng-repeat="child in $ctrl.children | filter:$ctrl.query" ng-click="$ctrl.loadDir(child)" ng-model="$ctrl.children">
+          <tr class="clickable" ng-repeat="child in $ctrl.children | filter:$ctrl.query" ng-click="$ctrl.loadDir(child)" ng-model="$ctrl.children" context="context1">
             <td ng-if="child[2] == 0"><i class="fas fa-file"></i></td>
             <td ng-if="child[2] == 1"><i class="fas fa-folder"></i></td>
             <td ng-if="child[4] == 1" style="color: green;">{{child[1]}}</td>
@@ -85,3 +128,10 @@
   </div>
 </div>
 
+<ul id="context1" class="dropdown-menu">
+  <li><a ng-click="edit()">Edit</a></li>
+  <li><a ng-click="link()">Link</a></li>
+  <li><a ng-click="delete()">Delete</a></li>
+  <li class="divider"></li>
+  <li><a ng-click="properties()">Properties</a></li>
+</ul>

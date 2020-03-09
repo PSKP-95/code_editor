@@ -32,11 +32,17 @@ angular.
         this.code = "";
         // running code
         this.runcode = function() {
+            var c = this.editor.getValue("code");
+
+            if(c == ""){
+                toastr["error"]("Code is blank.", "Code");
+                return;
+            }
             this.output = "running";
             $http({
                 url: 'http://127.0.0.1:8888/run',
                 method: "POST",
-                data: { 'code' : this.editor.getValue("code"),
+                data: { 'code' : c,
                         'input': this.input, 
                         'ext': this.ext }
             }).then(function(response) {
@@ -49,7 +55,7 @@ angular.
             value: "",
             theme: "vs-dark",
             language: 'cpp',
-            fontSize: 16,
+            fontSize: 20,
             automaticLayout:true
         });
 
@@ -152,7 +158,7 @@ angular.
                 self.children.sort(function(a, b){return b[2] - a[2]});   // first folders and then files
             });
         }
-
+        
         // creat new file in current directory
         this.createFile = function(content) {
             var filename = prompt("Enter Filename");
@@ -173,11 +179,16 @@ angular.
         }
 
         this.createDir = function() {
+            var dir_name = prompt("Enter folder name","");
+            if(dir_name == ""){
+                toastr["error"]("Directory Name is Empty.", "Folder");
+                return;
+            }
             $http({
                 url: 'http://127.0.0.1:8888/mkdir',
                 method: "POST",
                 data: {
-                    "folder": prompt("Enter folder name",""),
+                    "folder": dir_name,
                     "parent": this.parent_id,
                 }
             }).then(function(response) {
@@ -186,13 +197,19 @@ angular.
             });
         }
         
-        // ctrl + s
+        
         document.addEventListener("keydown", function(e) {
+            // ctrl + s
+            console.log(e)
             if ((window.navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey)  && e.keyCode == 83) {
               e.preventDefault();
               self.saveFile();
               // Process the event here (such as click on submit button)
-            }
+            } else if ((window.navigator.platform.match("Mac") ? e.altKey : e.altKey)  && e.keyCode == 78) {
+                e.preventDefault();
+                self.createFile();
+                // Process the event here (such as click on submit button)
+              }
         }, false);
 
         this.saveFile = function() {
@@ -320,5 +337,8 @@ angular.
             }
         }
 
+        this.rightClick = function(e) {
+            console.log(e);
+        }
     }]
   });

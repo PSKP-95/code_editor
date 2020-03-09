@@ -40,11 +40,6 @@ textarea,pre {
     padding: 10px;
 }
 
-.menu{
-    font-size: 28px;
-    padding: 3px;
-    border: 2px solid black;
-}
 
 .clickable:hover {
     cursor: pointer;
@@ -73,11 +68,13 @@ textarea,pre {
 #input{
     flex: 50%;
     height: 20vh;
+    border: 1px solid black;
 }
 
 #output{
     flex: 50%;
     height: 20vh;
+    border: 1px solid black;
 }
 
 .thead-dark{
@@ -94,4 +91,8 @@ textarea,pre {
 
 .row {
     border-bottom: 2px solid black;
+}
+
+.padding-right{
+    margin-right: 5px;
 }
