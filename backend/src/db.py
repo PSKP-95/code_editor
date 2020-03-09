@@ -8,7 +8,7 @@ def connection():
 		conn = pymysql.connect('https://99.000webhost.io','id12766381_root','pskp@a95a','id12766381_code_rtc')
 		cur = conn.cursor()
 	elif DATABASE == "sqlite3":
-		conn = sqlite3.connect("code_RTC.db")
+		conn = sqlite3.connect("data/code_RTC.db")
 		cur = conn.cursor()
 	return (conn,cur)
 
@@ -287,6 +287,68 @@ def change_file_flag(file_id, flag):
 	try:
 		cur.execute(sql,args)	
 	except:
+		return "fail"
+	finally:
+		# if you are writing to db then commit and close required
+		conn.commit()
+		conn.close()
+	return "success"
+
+def delete_node(node_id,node_type):
+	conn, cur = connection()
+	
+	if node_type == 0: # mean file
+		sql = """update bucket set type = 2 where node_id= %s"""  # hidden file
+	else:
+		sql = """update bucket set type = 3 where node_id= %s"""  # hidden folder
+	
+	if DATABASE == "sqlite3":
+		sql = sql.replace("%s","?")
+	
+	args = (node_id,)
+	try:
+		cur.execute(sql,args)	
+	except :
+		return "fail"
+	finally:
+		# if you are writing to db then commit and close required
+		conn.commit()
+		conn.close()
+	return "success"
+
+def rename_node(node_id,new_name):
+	conn, cur = connection()
+	
+	sql = """update bucket set node = %s where node_id= %s""" 
+	
+	
+	if DATABASE == "sqlite3":
+		sql = sql.replace("%s","?")
+	
+	args = (new_name,node_id)
+	try:
+		cur.execute(sql,args)	
+	except :
+		return "fail"
+	finally:
+		# if you are writing to db then commit and close required
+		conn.commit()
+		conn.close()
+	return "success"
+
+def cut_paste(node_id,parent):
+	conn, cur = connection()
+	
+	sql = """update bucket set parent = %s where node_id= %s""" 
+	
+	
+	if DATABASE == "sqlite3":
+		sql = sql.replace("%s","?")
+	
+	args = (parent,node_id)
+	try:
+		cur.execute(sql,args)	
+	except :
 		return "fail"
 	finally:
 		# if you are writing to db then commit and close required

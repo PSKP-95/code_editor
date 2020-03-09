@@ -76,6 +76,24 @@ def updateflag():
 	
 	return db.change_file_flag(file_id,flag)
 
+@app.route('/delete',methods=['POST','GET'])
+def deleteNode():
+	node_id = request.json["node_id"]
+	node_type = request.json["type"]
+	return db.delete_node(node_id, node_type)
+
+@app.route('/rename',methods=['POST','GET'])
+def renameNode():
+	node_id = request.json["node_id"]
+	name = request.json["name"]
+	return db.rename_node(node_id, name)
+
+@app.route('/cutpaste',methods=['POST','GET'])
+def cutpaste():
+	node_id = request.json["node_id"]
+	parent = request.json["parent"]
+	return db.cut_paste(node_id, parent)
+
 @app.route('/',methods=['POST','GET'])
 def index():
 	(flag, username) = secure.check_session(session)   # check session for user's login

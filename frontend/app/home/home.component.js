@@ -2,10 +2,10 @@
 
 // Register `phoneList` component, along with its associated controller and template
 angular.
-  module('home').
-  component('home', {
+module('home').
+component('home', {
     templateUrl: 'home/home.template.html',
-    controller: ['$http','$window','$rootScope', function homeController($http,$window,$rootScope) {
+    controller: ['$http', '$window', '$rootScope', function homeController($http, $window, $rootScope) {
         toastr.options = {
             "closeButton": true,
             "debug": false,
@@ -26,15 +26,15 @@ angular.
         // for getting access in http request
         var self = this;
 
-        this.input = "";    // input data expected from user
-        this.output = "";   // output data
-        this.ext = ".cpp";   // default extension
+        this.input = ""; // input data expected from user
+        this.output = ""; // output data
+        this.ext = ".cpp"; // default extension
         this.code = "";
         // running code
-        this.runcode = function() {
+        this.runcode = function () {
             var c = this.editor.getValue("code");
 
-            if(c == ""){
+            if (c == "") {
                 toastr["error"]("Code is blank.", "Code");
                 return;
             }
@@ -42,37 +42,39 @@ angular.
             $http({
                 url: 'http://127.0.0.1:8888/run',
                 method: "POST",
-                data: { 'code' : c,
-                        'input': this.input, 
-                        'ext': this.ext }
-            }).then(function(response) {
+                data: {
+                    'code': c,
+                    'input': this.input,
+                    'ext': this.ext
+                }
+            }).then(function (response) {
                 self.output = response["data"];
             });
         }
-        
+
         // codearea
         this.editor = monaco.editor.create(document.getElementById('code'), {
             value: "",
             theme: "vs-dark",
             language: 'cpp',
             fontSize: 20,
-            automaticLayout:true
+            automaticLayout: true
         });
 
         this.filetype = "cpp";
-        this.langChange = function() {
-            if(this.ext == ".cpp"){
+        this.langChange = function () {
+            if (this.ext == ".cpp") {
                 this.filetype = "cpp";
-            } else if(this.ext == ".py"){
+            } else if (this.ext == ".py") {
                 this.filetype = "python";
             } else {
                 this.filetype = "c";
             }
-            monaco.editor.setModelLanguage(this.editor.getModel(),this.filetype);
+            monaco.editor.setModelLanguage(this.editor.getModel(), this.filetype);
         }
-        
+
         this.theme = "vs-dark";
-        this.themeChange = function(){
+        this.themeChange = function () {
             monaco.editor.setTheme(this.theme);
         }
         // explorer
@@ -89,15 +91,19 @@ angular.
         $http({
             url: 'http://127.0.0.1:8888/dir',
             method: "POST",
-            data: { 'dir_id' : self.parent_id}
-        }).then(function(response) {
+            data: {
+                'dir_id': self.parent_id
+            }
+        }).then(function (response) {
             self.children = response.data;
-            self.children.sort(function(a, b){return b[2] - a[2]});
+            self.children.sort(function (a, b) {
+                return b[2] - a[2]
+            });
         });
 
-        this.loadDir = function(child) {
-            if(child[2] == 1){  // if folder
-                this.stack.push([this.parent,this.parent_id]);
+        this.loadDir = function (child) {
+            if (child[2] == 1) { // if folder
+                this.stack.push([this.parent, this.parent_id]);
                 this.parent = child[1];
                 this.parent_id = child[0];
                 this.loadDirUsingId(child[0]);
@@ -106,32 +112,32 @@ angular.
             }
         }
 
-        this.loadFile = function(node) {
+        this.loadFile = function (node) {
             this.openfile = node;
             this.openfile_id = node[0];
             this.openfile_path = "";
-            for(var i=0;i<this.stack.length;i++){
+            for (var i = 0; i < this.stack.length; i++) {
                 this.openfile_path += this.stack[i][0] + "/";
             }
             this.openfile_path += node[1];
             $http({
                 url: 'http://127.0.0.1:8888/cat',
                 method: "POST",
-                data: { 
-                    'filename' : node[1],
+                data: {
+                    'filename': node[1],
                     'parent': node[3]
                 }
-            }).then(function(response) {
+            }).then(function (response) {
                 self.code = response.data[3];
                 self.openfile_id = response.data[0];
-                
-                if(response.data[5] == 1)
+
+                if (response.data[5] == 1)
                     self.flag = "AC";
-                else if(response.data[5] == 2)
+                else if (response.data[5] == 2)
                     self.flag = "WA";
-                else if(response.data[5] == 3)
+                else if (response.data[5] == 3)
                     self.flag = "TLE";
-                else if(response.data[5] == 4)
+                else if (response.data[5] == 4)
                     self.flag = "RE";
                 self.editor.setValue(self.code);
                 self.loadAllTestCases();
@@ -139,8 +145,8 @@ angular.
             });
         }
 
-        this.back = function() {
-            if(this.stack.length == 0)
+        this.back = function () {
+            if (this.stack.length == 0)
                 return;
             var tmp = this.stack.pop();
             this.parent_id = tmp[1];
@@ -148,21 +154,25 @@ angular.
             this.loadDirUsingId(this.parent_id);
         }
 
-        this.loadDirUsingId = function(id) {
+        this.loadDirUsingId = function (id) {
             $http({
                 url: 'http://127.0.0.1:8888/dir',
                 method: "POST",
-                data: { 'dir_id' : id}
-            }).then(function(response) {
+                data: {
+                    'dir_id': id
+                }
+            }).then(function (response) {
                 self.children = response.data;
-                self.children.sort(function(a, b){return b[2] - a[2]});   // first folders and then files
+                self.children.sort(function (a, b) {
+                    return b[2] - a[2]
+                }); // first folders and then files
             });
         }
-        
+
         // creat new file in current directory
-        this.createFile = function(content) {
+        this.createFile = function (content) {
             var filename = prompt("Enter Filename");
-            if(filename == null)
+            if (filename == null)
                 return;
             $http({
                 url: 'http://127.0.0.1:8888/touch',
@@ -172,15 +182,15 @@ angular.
                     "parent": this.parent_id,
                     "content": content
                 }
-            }).then(function(response) {
-                self.loadDirUsingId(self.parent_id);  // refresh directory
+            }).then(function (response) {
+                self.loadDirUsingId(self.parent_id); // refresh directory
                 toastr["success"]("File Creation Successful.", "File");
             });
         }
 
-        this.createDir = function() {
-            var dir_name = prompt("Enter folder name","");
-            if(dir_name == ""){
+        this.createDir = function () {
+            var dir_name = prompt("Enter folder name", "");
+            if (dir_name == "") {
                 toastr["error"]("Directory Name is Empty.", "Folder");
                 return;
             }
@@ -191,31 +201,31 @@ angular.
                     "folder": dir_name,
                     "parent": this.parent_id,
                 }
-            }).then(function(response) {
-                self.loadDirUsingId(self.parent_id);  // refresh directory
+            }).then(function (response) {
+                self.loadDirUsingId(self.parent_id); // refresh directory
                 toastr["success"]("Directory Created Successfully.", "Folder");
             });
         }
-        
-        
-        document.addEventListener("keydown", function(e) {
+
+
+        document.addEventListener("keydown", function (e) {
             // ctrl + s
             console.log(e)
-            if ((window.navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey)  && e.keyCode == 83) {
-              e.preventDefault();
-              self.saveFile();
-              // Process the event here (such as click on submit button)
-            } else if ((window.navigator.platform.match("Mac") ? e.altKey : e.altKey)  && e.keyCode == 78) {
+            if ((window.navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey) && e.keyCode == 83) {
+                e.preventDefault();
+                self.saveFile();
+                // Process the event here (such as click on submit button)
+            } else if ((window.navigator.platform.match("Mac") ? e.altKey : e.altKey) && e.keyCode == 78) {
                 e.preventDefault();
                 self.createFile();
                 // Process the event here (such as click on submit button)
-              }
+            }
         }, false);
 
-        this.saveFile = function() {
+        this.saveFile = function () {
             this.code = this.editor.getValue("code");
-            
-            if(this.openfile != ""){
+
+            if (this.openfile != "") {
                 $http({
                     url: 'http://127.0.0.1:8888/edit',
                     method: "POST",
@@ -224,22 +234,22 @@ angular.
                         "parent": this.openfile[3],
                         "content": this.code
                     }
-                }).then(function(response) {
+                }).then(function (response) {
                     toastr["success"]("File Saved Successfully", "File");
                 });
             } else {
                 this.createFile(this.editor.getValue("code"));
             }
         }
-        
+
         // testcases
         this.testcases = [];
-        this.addTestCase = function() {
-            if(this.input == ""  && this.output == ""){
+        this.addTestCase = function () {
+            if (this.input == "" && this.output == "") {
                 toastr["error"]("Both input and output empty.", "Testcases");
                 return;
             }
-            if(this.openfile != ""){
+            if (this.openfile != "") {
                 $http({
                     url: 'http://127.0.0.1:8888/addtest',
                     method: "POST",
@@ -248,7 +258,7 @@ angular.
                         "input": this.input,
                         "output": this.output
                     }
-                }).then(function(response) {
+                }).then(function (response) {
                     self.loadAllTestCases();
                     toastr["success"]("Testcases Added Successfully.", "Testcases");
                 });
@@ -258,34 +268,34 @@ angular.
         }
 
         // loads all testcases of current file or when file loaded testcases get loaded
-        this.loadAllTestCases = function() {
-            if(this.openfile != ""){
+        this.loadAllTestCases = function () {
+            if (this.openfile != "") {
                 $http({
                     url: 'http://127.0.0.1:8888/loadtests',
                     method: "POST",
                     data: {
                         "node_id": this.openfile_id,
                     }
-                }).then(function(response) {
+                }).then(function (response) {
                     self.testcases = response.data;
                 });
             }
         }
 
-        this.showTest = function(test) {
+        this.showTest = function (test) {
             this.input = test[2];
             this.output = test[3];
         }
 
-        this.runOnTestCases = function() {
-            if(this.code != this.editor.getValue("code")){
+        this.runOnTestCases = function () {
+            if (this.code != this.editor.getValue("code")) {
                 toastr["error"]("File not saved", "File");
                 return;
             }
-            for(var i=0;i<this.testcases.length;i++){
+            for (var i = 0; i < this.testcases.length; i++) {
                 this.testcases[i][5] = -1;
             }
-            if(this.testcases.length > 0){
+            if (this.testcases.length > 0) {
                 $http({
                     url: 'http://127.0.0.1:8888/runtests',
                     method: "POST",
@@ -293,7 +303,7 @@ angular.
                         "node_id": this.openfile_id,
                         "parent": this.openfile[3]
                     }
-                }).then(function(response) {
+                }).then(function (response) {
                     self.testcases = response.data;
                 });
             } else {
@@ -303,8 +313,8 @@ angular.
 
         // flag for AC, WA, TLE, RE
         this.flag = null;
-        this.flagChange = function() {
-            if(this.openfile != ""){
+        this.flagChange = function () {
+            if (this.openfile != "") {
                 $http({
                     url: 'http://127.0.0.1:8888/updateflag',
                     method: "POST",
@@ -312,33 +322,127 @@ angular.
                         "node_id": this.openfile_id,
                         "flag": this.flag
                     }
-                }).then(function(response) {
-                    if(response.data == "success")
+                }).then(function (response) {
+                    if (response.data == "success")
                         toastr["success"]("verdict changed", "File");
-                    else 
+                    else
                         toastr["error"]("verdict not changed", "File");
-                    self.loadDirUsingId(self.parent_id);  // refresh directory
+                    self.loadDirUsingId(self.parent_id); // refresh directory
                 });
             }
         }
 
         this.query;
         this.searchbox = "none";
-        $(".searchbox").css("display",this.searchbox);
+        $(".searchbox").css("display", this.searchbox);
         // search within folder
-        this.search = function() {
-            if(this.searchbox == "none"){
+        this.search = function () {
+            if (this.searchbox == "none") {
                 this.searchbox = "block";
-                $(".searchbox").css("display",this.searchbox);
+                $(".searchbox").css("display", this.searchbox);
             } else {
                 this.searchbox = "none";
                 this.query = "";
-                $(".searchbox").css("display",this.searchbox);
+                $(".searchbox").css("display", this.searchbox);
             }
         }
 
-        this.rightClick = function(e) {
-            console.log(e);
+        this.contextFile = null;
+        this.contextMenuFlag = true;
+        // context menu / right click option for file explorer
+        this.contextMenu = function (child, e) {
+            if(child == null){
+                this.contextMenuFlag = false;
+            } else {
+                this.contextMenuFlag = true;
+            }
+            if (e.which == 3 && (this.contextMenuFlag || this.clipboard.data_available)) {
+                var top = e.pageY - 75;
+                var left = e.pageX;
+                this.contextFile = child;
+                $("#context-menu").css({
+                  display: "block",
+                  top: top,
+                  left: left
+                }).addClass("show");
+                return false; 
+            }
+        }
+        $(document).click(function() {
+            $('#context-menu').hide();
+        });
+
+        // edit file properties 
+        this.editFile = function(file) {
+            $('#context-menu').hide();
+            var name = prompt("Enter new Filename");
+
+            if(name != ""){
+                $http({
+                    url: 'http://127.0.0.1:8888/rename',
+                    method: "POST",
+                    data: {
+                        "node_id": this.contextFile[0],
+                        "name": name
+                    }
+                }).then(function (response) {
+                    if (response.data == "success")
+                        toastr["success"]("Rename Completed", "File");
+                    else
+                        toastr["error"]("omething ent rong", "File");
+                    self.loadDirUsingId(self.parent_id); // refresh directory
+                });
+            }
+        }
+
+        // delete file
+        this.deleteFile = function() {console.log(this.contextFile);
+            $('#context-menu').hide();
+
+            if(window.confirm("Really Want to delete '" + this.contextFile[1] + "'. Deletion only hide file / Folder.")){
+                $http({
+                    url: 'http://127.0.0.1:8888/delete',
+                    method: "POST",
+                    data: {
+                        "node_id": this.contextFile[0],
+                        "type": this.contextFile[2]
+                    }
+                }).then(function (response) {
+                    if (response.data == "success")
+                        toastr["success"]("Deletion Completed", "File");
+                    else
+                        toastr["error"]("omething ent rong", "File");
+                    self.loadDirUsingId(self.parent_id); // refresh directory
+                });
+            }
+        }
+
+        this.clipboard = {
+            "data_available": false,
+            "data":null
+        }
+        // copy file 
+        this.copyFile = function() {
+            if(this.clipboard.data_available && window.confirm("Really Want to paste '" + this.clipboard.data[1] + "' to '" + this.parent + "' . Will remove file / Folder.")){  // paste
+                this.clipboard.data_available = false;
+                $http({
+                    url: 'http://127.0.0.1:8888/cutpaste',
+                    method: "POST",
+                    data: {
+                        "node_id": this.clipboard.data[0],
+                        "parent": this.parent_id
+                    }
+                }).then(function (response) {
+                    if (response.data == "success")
+                        toastr["success"]("cut paste Completed", "File");
+                    else
+                        toastr["error"]("cut paste unsuccessfull", "File");
+                    self.loadDirUsingId(self.parent_id); // refresh directory
+                });
+            } else {   // cut
+                this.clipboard.data_available = true;
+                this.clipboard.data = this.contextFile;
+            }
         }
     }]
-  });
+});

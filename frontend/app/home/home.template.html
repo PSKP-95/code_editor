@@ -86,7 +86,7 @@
       </div>
     </div>
     
-    <div class="table-container">
+    <div class="table-container"  >
       <table class="table">
         <thead class="thead-dark">
           <tr>
@@ -95,7 +95,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr class="clickable" ng-repeat="child in $ctrl.children | filter:$ctrl.query" ng-click="$ctrl.loadDir(child)" ng-model="$ctrl.children" context="context1">
+          <tr class="clickable" ng-repeat="child in $ctrl.children | filter:$ctrl.query" ng-if="child[2] < 2" ng-click="$ctrl.loadDir(child)" ng-mousedown="$ctrl.contextMenu(child,$event)" oncontextmenu="return false;" ng-model="$ctrl.children">
             <td ng-if="child[2] == 0"><i class="fas fa-file"></i></td>
             <td ng-if="child[2] == 1"><i class="fas fa-folder"></i></td>
             <td ng-if="child[4] == 1" style="color: green;">{{child[1]}}</td>
@@ -104,6 +104,29 @@
           </tr>
         </tbody>
       </table>
+      <div style="height: 100%;" ng-mousedown="$ctrl.contextMenu(null,$event)" oncontextmenu="return false;">
+
+      </div>
+      <div class="dropdown-menu dropdown-menu-sm" id="context-menu">
+        <table class="table-drop">
+          <tr ng-if="$ctrl.contextMenuFlag" class="clickable dropdown-item " ng-click="$ctrl.deleteFile()">
+            <td><i class="fa fa-trash" aria-hidden="true"></i></td>
+            <td>Delete</td>
+          </tr>
+          <tr ng-if="$ctrl.contextMenuFlag" class="clickable dropdown-item" ng-click="$ctrl.editFile()">
+            <td><i class="fa fa-pencil-square" aria-hidden="true"></i></td>
+            <td>Rename</td>
+          </tr>
+          <tr ng-if="$ctrl.contextMenuFlag" class="clickable dropdown-item" ng-click="$ctrl.copyFile()">
+            <td><i class="fa fa-scissors" aria-hidden="true"></i></td>
+            <td>Cut</td>
+          </tr>
+          <tr ng-if="$ctrl.clipboard.data_available" class="clickable dropdown-item" ng-click="$ctrl.copyFile()">
+            <td><i class="fa fa-clipboard" aria-hidden="true"></i></td>
+            <td>Paste</td>
+          </tr>
+        </table>
+        </div>
     </div>
     <div>
       <div class="testcase">

@@ -96,3 +96,14 @@ textarea,pre {
 .padding-right{
     margin-right: 5px;
 }
+
+.dropdown-menu, .dropdown-menu-sm{
+    margin: 0px;
+    padding: 0px;
+}
+
+.table-drop {
+    margin: 0px;
+    padding: 0px;
+    width: 100%;
+}
