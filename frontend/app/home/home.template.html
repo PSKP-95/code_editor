@@ -74,14 +74,14 @@
 <div class="row">
   
   <div class="col-lg-2 nopadding">
-    <div id="controls" class="searchbox"><input placeholder="Search" class="form-control" type="Search" ng-model="$ctrl.query"></div>
+    <div id="controls" class="searchbox "><input placeholder="Search" class="form-control" type="Search" ng-model="$ctrl.query"></div>
     
     <div class="controls" >
       
       <div title="Go Back" class="clickable" style="flex: 10%;" ng-click="$ctrl.back()"><i class="fa fa-arrow-left" aria-hidden="true"></i>
       </div>
       <div style="flex: 70%;">{{$ctrl.parent}}</div>
-      <div ng-click="$ctrl.search()" style="flex: 10%;"><i class="fa fa-search" aria-hidden="true"></i></div>
+      <div title="search file in current Directory" class="clickable" ng-click="$ctrl.search()" style="flex: 10%;"><i class="fa fa-search" aria-hidden="true"></i></div>
       <div style="flex: 10%;"><i class="fa fa-times" aria-hidden="true"></i>
       </div>
     </div>
@@ -124,6 +124,14 @@
           <tr ng-if="$ctrl.clipboard.data_available" class="clickable dropdown-item" ng-click="$ctrl.copyFile()">
             <td><i class="fa fa-clipboard" aria-hidden="true"></i></td>
             <td>Paste</td>
+          </tr>
+          <tr ng-if="$ctrl.contextMenuFlag == false" class="clickable dropdown-item" ng-click="$ctrl.createFile('')">
+            <td><i title="Create File" class="fas fa-file-medical"></i></td>
+            <td>New File</td>
+          </tr>
+          <tr ng-if="$ctrl.contextMenuFlag == false" class="clickable dropdown-item" ng-click="$ctrl.createDir()">
+            <td><i title="Create Directory" class="fas fa-folder-plus"></i></td>
+            <td>New Folder</td>
           </tr>
         </table>
         </div>

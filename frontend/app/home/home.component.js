@@ -194,30 +194,36 @@ component('home', {
                 toastr["error"]("Directory Name is Empty.", "Folder");
                 return;
             }
-            $http({
-                url: 'http://127.0.0.1:8888/mkdir',
-                method: "POST",
-                data: {
-                    "folder": dir_name,
-                    "parent": this.parent_id,
-                }
-            }).then(function (response) {
-                self.loadDirUsingId(self.parent_id); // refresh directory
-                toastr["success"]("Directory Created Successfully.", "Folder");
-            });
+            if(dir_name != null){
+                $http({
+                    url: 'http://127.0.0.1:8888/mkdir',
+                    method: "POST",
+                    data: {
+                        "folder": dir_name,
+                        "parent": this.parent_id,
+                    }
+                }).then(function (response) {
+                    self.loadDirUsingId(self.parent_id); // refresh directory
+                    toastr["success"]("Directory Created Successfully.", "Folder");
+                });
+            }
         }
 
 
+        // keyword shortcuts
         document.addEventListener("keydown", function (e) {
-            // ctrl + s
-            console.log(e)
-            if ((window.navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey) && e.keyCode == 83) {
+
+            if ((window.navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey) && e.keyCode == 83) { //ctrl + s
                 e.preventDefault();
                 self.saveFile();
                 // Process the event here (such as click on submit button)
-            } else if ((window.navigator.platform.match("Mac") ? e.altKey : e.altKey) && e.keyCode == 78) {
+            } else if ((window.navigator.platform.match("Mac") ? e.altKey : e.altKey) && e.keyCode == 78 && !e.shiftKey) { // alt + n
                 e.preventDefault();
                 self.createFile();
+                // Process the event here (such as click on submit button)
+            } else if ((window.navigator.platform.match("Mac") ? e.altKey : e.altKey) && e.keyCode == 78 && e.shiftKey) {  // alt + shift + n
+                e.preventDefault();
+                self.createDir();
                 // Process the event here (such as click on submit button)
             }
         }, false);
@@ -348,15 +354,17 @@ component('home', {
         }
 
         this.contextFile = null;
-        this.contextMenuFlag = true;
+        this.contextMenuFlag = false;
         // context menu / right click option for file explorer
         this.contextMenu = function (child, e) {
+            
             if(child == null){
                 this.contextMenuFlag = false;
             } else {
                 this.contextMenuFlag = true;
             }
-            if (e.which == 3 && (this.contextMenuFlag || this.clipboard.data_available)) {
+            $('#context-menu').hide();
+            if (e.which == 3) {
                 var top = e.pageY - 75;
                 var left = e.pageX;
                 this.contextFile = child;
@@ -372,12 +380,12 @@ component('home', {
             $('#context-menu').hide();
         });
 
-        // edit file properties 
+        // rename file properties 
         this.editFile = function(file) {
             $('#context-menu').hide();
             var name = prompt("Enter new Filename");
-
-            if(name != ""){
+            
+            if(name != "" && name != null){
                 $http({
                     url: 'http://127.0.0.1:8888/rename',
                     method: "POST",

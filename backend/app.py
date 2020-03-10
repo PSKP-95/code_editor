@@ -99,36 +99,39 @@ def index():
 	(flag, username) = secure.check_session(session)   # check session for user's login
 	return "Hello"
 
-@app.route('/login',methods=['POST','GET'])
-def login():
-	error = -1   
+# @app.route('/login',methods=['POST','GET'])
+# def login():
+# 	error = -1   
 	
-	(flag, username) = secure.check_session(session)
+# 	(flag, username) = secure.check_session(session)
 
-	if request.method == "POST":
-		username, password = secure.check_signin(request)
-		if db.check_record(username, password):
-			error = 1   # successful
-			secure.add_username_session(username,session)
-			(flag, username) = (True, username)
-		else:
-			error = 2    # wrong password / username
-	if flag:
-		return redirect(url_for("index"), code=302)
-	return render_template("login.html",active=["","","","",""],error = error)
+# 	if request.method == "POST":
+# 		username, password = secure.check_signin(request)
+# 		if db.check_record(username, password):
+# 			error = 1   # successful
+# 			secure.add_username_session(username,session)
+# 			(flag, username) = (True, username)
+# 		else:
+# 			error = 2    # wrong password / username
+# 	if flag:
+# 		return redirect(url_for("index"), code=302)
+# 	return render_template("login.html",active=["","","","",""],error = error)
 
-@app.route('/signup',methods=['POST','GET'])
-def signup():
-	error = -1
-	if request.method == "POST":
-		flag, username, password, email = secure.check_signup(request)
-		if flag :
-			if db.new_signup(username, password, email):
-				error = 1
-				secure.setup_environment(username)
-			else:
-				error = 2 # user already exists
-		else:
-			error = 3  # wrong info
-		return redirect(url_for("login"), code=302)
-	return render_template("signup.html",active=["","","","",""],error = error)
+# @app.route('/signup',methods=['POST','GET'])
+# def signup():
+# 	error = -1
+# 	if request.method == "POST":
+# 		flag, username, password, email = secure.check_signup(request)
+# 		if flag :
+# 			if db.new_signup(username, password, email):
+# 				error = 1
+# 				secure.setup_environment(username)
+# 			else:
+# 				error = 2 # user already exists
+# 		else:
+# 			error = 3  # wrong info
+# 		return redirect(url_for("login"), code=302)
+# 	return render_template("signup.html",active=["","","","",""],error = error)
+
+if __name__ == "__main__":
+	app.run(host='0.0.0.0',port=8888)
