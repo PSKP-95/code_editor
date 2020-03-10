@@ -1,4 +1,6 @@
 # Code - RTC
+## Installation & Information
+You can find this [here](https://github.com/PSKP-95/code_rtc/wiki/Installation)
 ## To Do
 - [x] Creating Code
 - [x] Running Code on user input
