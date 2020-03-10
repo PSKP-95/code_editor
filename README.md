@@ -7,6 +7,7 @@ You can find this [here](https://github.com/PSKP-95/code_rtc/wiki/Installation)
 - [x] Creating Testcases
 - [x] Running on Testcases
 - [x] File explorer
+- [x] Context menu for File explorer with delete, cut, rename, paste.
 - [ ] Export files
 - [ ] Import Folders/Files
 
