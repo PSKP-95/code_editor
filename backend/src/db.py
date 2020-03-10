@@ -294,7 +294,7 @@ def change_file_flag(file_id, flag):
 		conn.close()
 	return "success"
 
-def delete_node(node_id,node_type):
+def hide_node(node_id,node_type):
 	conn, cur = connection()
 	
 	if node_type == 0: # mean file
@@ -315,6 +315,50 @@ def delete_node(node_id,node_type):
 		conn.commit()
 		conn.close()
 	return "success"
+
+def delete_node(node_id,node_type):
+	conn, cur = connection()
+
+	sql1 = "delete from bucket where node_id "
+	sql2 = """select node_id,type from bucket where parent= %s"""
+	sql3 = "delete from tests where node_id "
+
+	if DATABASE == "sqlite3":
+		sql2 = sql2.replace("%s","?")
+
+	node_ids = []
+	stack = [(node_id,node_type)]
+
+	while stack != []:  # stack not empty
+		node = stack.pop()
+
+		node_ids.append(node[0])
+
+		if(node[1] == 1):  # node is folder
+			try:
+				cur.execute(sql2,(node[0],))
+				data = cur.fetchall() 
+				stack.extend(data)
+			except :
+				return "fail"
+	try:
+		if len(node_ids) > 1:
+			sql1 = sql1 + "in " + str(tuple(node_ids))
+			sql3 = sql3 + "in " + str(tuple(node_ids))
+		elif len(node_ids) == 1 :
+			sql1 = sql1 + "= " +  str(node_ids[0])
+			sql3 = sql3 + "= " + str(node_ids[0])
+		else :
+			return "fail"
+		
+		cur.executescript(sql1)
+	except:
+		return "fail"
+	finally:
+		conn.commit()
+		conn.close()
+	return str(len(node_ids))
+
 
 def rename_node(node_id,new_name):
 	conn, cur = connection()

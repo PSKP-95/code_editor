@@ -416,10 +416,11 @@ component('home', {
                         "type": this.contextFile[2]
                     }
                 }).then(function (response) {
-                    if (response.data == "success")
-                        toastr["success"]("Deletion Completed", "File");
+                    console.log(response);
+                    if (response.data != "fail")
+                        toastr["success"](response.data + " nodes deleted.", "File");
                     else
-                        toastr["error"]("omething ent rong", "File");
+                        toastr["error"]("Something Went Wrong", "File");
                     self.loadDirUsingId(self.parent_id); // refresh directory
                 });
             }
