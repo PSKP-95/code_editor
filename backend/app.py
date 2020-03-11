@@ -88,6 +88,12 @@ def renameNode():
 	name = request.json["name"]
 	return db.rename_node(node_id, name)
 
+@app.route('/savenote',methods=['POST','GET'])
+def savenote():
+	node_id = request.json["node_id"]
+	note = request.json["note"]
+	return db.save_note(node_id, note)
+
 @app.route('/cutpaste',methods=['POST','GET'])
 def cutpaste():
 	node_id = request.json["node_id"]

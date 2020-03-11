@@ -24,7 +24,8 @@ Need to just change `DATABASE` in `code_rtc/backend/src/db.py`
   node varchar(50) NOT NULL,
   file text,
   parent int(11) NOT NULL, 
-  flag integer);`
+  flag integer,
+  note text);`
 
 ### for tests
 

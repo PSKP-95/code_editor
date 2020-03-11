@@ -6,6 +6,9 @@ module('home').
 component('home', {
     templateUrl: 'home/home.template.html',
     controller: ['$http', '$window', '$rootScope', function homeController($http, $window, $rootScope) {
+        this.noteEditor =  CKEDITOR.replace( 'note' );
+        this.note = null;
+
         toastr.options = {
             "closeButton": true,
             "debug": false,
@@ -130,7 +133,7 @@ component('home', {
             }).then(function (response) {
                 self.code = response.data[3];
                 self.openfile_id = response.data[0];
-
+                self.note = response.data[6];
                 if (response.data[5] == 1)
                     self.flag = "AC";
                 else if (response.data[5] == 2)
@@ -139,8 +142,11 @@ component('home', {
                     self.flag = "TLE";
                 else if (response.data[5] == 4)
                     self.flag = "RE";
+                else 
+                    self.flag = null;
                 self.editor.setValue(self.code);
                 self.loadAllTestCases();
+                self.noteEditor.setData(self.note);
                 toastr["success"]("File Loading Successful.", "File");
             });
         }
@@ -334,6 +340,7 @@ component('home', {
                     else
                         toastr["error"]("verdict not changed", "File");
                     self.loadDirUsingId(self.parent_id); // refresh directory
+                    
                 });
             }
         }
@@ -452,6 +459,24 @@ component('home', {
                 this.clipboard.data_available = true;
                 this.clipboard.data = this.contextFile;
             }
+        }
+
+        this.saveNote = function() {
+            $('#myModal').modal('hide');
+            this.note = this.noteEditor.getData();
+            $http({
+                url: 'http://127.0.0.1:8888/savenote',
+                method: "POST",
+                data: {
+                    "node_id": this.openfile_id,
+                    "note": this.note
+                }
+            }).then(function (response) {
+                if (response.data != "fail")
+                    toastr["success"]("Note Saved Successfully.", "Note");
+                else
+                    toastr["error"]("Something Went Wrong", "Note");
+            });
         }
     }]
 });

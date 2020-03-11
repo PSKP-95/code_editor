@@ -50,7 +50,7 @@
 
   <i Title="Run Test Cases" ng-click="$ctrl.runOnTestCases()" class="fas fa-play-circle btn btn-outline-success clickable" aria-hidden="true"></i>
   <i Title="Run Code in editor" ng-click="$ctrl.runcode()" class="fa fa-play btn btn-outline-danger clickable" aria-hidden="true"></i>
-
+  <i Title="Add Note" ng-if="$ctrl.openfile != ''" type="button" data-toggle="modal" data-target="#myModal" class="fa fa-sticky-note btn btn-outline-success" aria-hidden="true"></i>
   <select class="btn" id="ext" ng-change="$ctrl.langChange()" ng-model="$ctrl.ext">
     <option value=".cpp">CPP</option>
     <option value=".py">Python</option>
@@ -151,6 +151,7 @@
   </div>
 
   <div class="col-lg-10 nopadding">
+    
     <div id="code"></div>
     <div class="io">
       <textarea placeholder="Paste Input Here" name="input" id="input" cols="20" rows="10" ng-model="$ctrl.input">{{$ctrl.input}}</textarea>
@@ -159,10 +160,30 @@
   </div>
 </div>
 
-<ul id="context1" class="dropdown-menu">
-  <li><a ng-click="edit()">Edit</a></li>
-  <li><a ng-click="link()">Link</a></li>
-  <li><a ng-click="delete()">Delete</a></li>
-  <li class="divider"></li>
-  <li><a ng-click="properties()">Properties</a></li>
-</ul>
+<!-- The Modal -->
+<div class="modal fade" id="myModal">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+    
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title">Modal Heading</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      
+      <!-- Modal body -->
+      <div class="modal-body">
+        <div class="code">
+          <textarea rows="100" name="note" id="note" ng-model="$ctrl.note">{{$ctrl.note}}</textarea>
+        </div>
+      </div>
+      
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <button type="button" ng-click="$ctrl.saveNote()" class="btn btn-primary">Save changes</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+      
+    </div>
+  </div>
+</div>

@@ -399,3 +399,23 @@ def cut_paste(node_id,parent):
 		conn.commit()
 		conn.close()
 	return "success"
+
+def save_note(node_id, note):
+	conn, cur = connection()
+	
+	sql = """update bucket set note = %s where node_id= %s""" 
+	
+	
+	if DATABASE == "sqlite3":
+		sql = sql.replace("%s","?")
+	
+	args = (note,node_id)
+	try:
+		cur.execute(sql,args)	
+	except :
+		return "fail"
+	finally:
+		# if you are writing to db then commit and close required
+		conn.commit()
+		conn.close()
+	return "success"
