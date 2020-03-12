@@ -119,6 +119,7 @@ component('home', {
             this.openfile = node;
             this.openfile_id = node[0];
             this.openfile_path = "";
+            // this.noteEditor.setData("");
             for (var i = 0; i < this.stack.length; i++) {
                 this.openfile_path += this.stack[i][0] + "/";
             }
@@ -145,9 +146,14 @@ component('home', {
                 else 
                     self.flag = null;
                 self.editor.setValue(self.code);
-                self.loadAllTestCases();
-                self.noteEditor.setData(self.note);
-                toastr["success"]("File Loading Successful.", "File");
+                
+                self.noteEditor.setData(self.note, {
+                    callback: function() {
+                        self.loadAllTestCases();
+                        toastr["success"]("File Loading Successful.", "File");
+                    }
+                });
+                
             });
         }
 

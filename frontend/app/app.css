@@ -113,3 +113,8 @@ textarea,pre {
     min-height: 100%;
     box-sizing: border-box;
 }
+
+.files:hover{
+    background-color: rgb(50, 52, 58);
+    color: rgb(230, 225, 225);
+}

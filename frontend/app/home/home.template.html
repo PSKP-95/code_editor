@@ -95,7 +95,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr class="clickable" ng-repeat="child in $ctrl.children | filter:$ctrl.query" ng-if="child[2] < 2" ng-click="$ctrl.loadDir(child)" ng-mousedown="$ctrl.contextMenu(child,$event)" oncontextmenu="return false;" ng-model="$ctrl.children">
+          <tr class="clickable files" ng-repeat="child in $ctrl.children | filter:$ctrl.query" ng-if="child[2] < 2" ng-click="$ctrl.loadDir(child)" ng-mousedown="$ctrl.contextMenu(child,$event)" oncontextmenu="return false;" ng-model="$ctrl.children">
             <td ng-if="child[2] == 0"><i class="fas fa-file"></i></td>
             <td ng-if="child[2] == 1"><i class="fas fa-folder"></i></td>
             <td ng-if="child[4] == 1" style="color: green;">{{child[1]}}</td>
@@ -174,7 +174,7 @@
       <!-- Modal body -->
       <div class="modal-body">
         <div class="code">
-          <textarea rows="100" name="note" id="note" ng-model="$ctrl.note">{{$ctrl.note}}</textarea>
+          <textarea rows="100" name="note" id="note"></textarea>
         </div>
       </div>
       
