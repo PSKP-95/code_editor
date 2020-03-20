@@ -41,7 +41,7 @@
         Setting <span class="caret"></span>
       </button>
       <table class="dropdown-menu">
-        <tr  ng-click="$ctrl.editorSetting()" class="clickable">
+        <tr data-toggle="modal" data-target="#editorSetting" class="clickable">
           <td><i title="Add Test Case" class="fa fa-cog"></i></td>
           <td>Editor Setting</td>
         </tr>
@@ -121,6 +121,10 @@
             <td><i class="fa fa-scissors" aria-hidden="true"></i></td>
             <td>Cut</td>
           </tr>
+          <tr ng-if="$ctrl.contextMenuFlag && $ctrl.fileOrFolder == 0" class="clickable dropdown-item" ng-click="$ctrl.download()">
+            <td><i class="fa fa-download" aria-hidden="true"></i></td>
+            <td>Download</td>
+          </tr>
           <tr ng-if="$ctrl.clipboard.data_available" class="clickable dropdown-item" ng-click="$ctrl.copyFile()">
             <td><i class="fa fa-clipboard" aria-hidden="true"></i></td>
             <td>Paste</td>
@@ -181,6 +185,31 @@
       <!-- Modal footer -->
       <div class="modal-footer">
         <button type="button" ng-click="$ctrl.saveNote()" class="btn btn-primary">Save changes</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+      
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="editorSetting">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+    
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title">Modal Heading</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      
+      <!-- Modal body -->
+      <div class="modal-body">
+        
+      </div>
+      
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <button type="button" ng-click="$ctrl.editorSetting()" class="btn btn-primary">Save changes</button>
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
       </div>
       

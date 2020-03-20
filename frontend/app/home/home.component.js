@@ -368,12 +368,15 @@ component('home', {
 
         this.contextFile = null;
         this.contextMenuFlag = false;
+        // file = 0 amd folder = 1
+        this.fileOrFolder = -1;
         // context menu / right click option for file explorer
         this.contextMenu = function (child, e) {
             
             if(child == null){
                 this.contextMenuFlag = false;
             } else {
+                this.fileOrFolder = child[2];
                 this.contextMenuFlag = true;
             }
             $('#context-menu').hide();
@@ -482,6 +485,39 @@ component('home', {
                     toastr["success"]("Note Saved Successfully.", "Note");
                 else
                     toastr["error"]("Something Went Wrong", "Note");
+            });
+        }
+
+        this.editorSetting = function() {
+            $('#editorSetting').modal('hide');
+            this.editor.updateOptions({
+                lineNumbers: "off",
+                fontSize: 10
+                
+            });
+        }
+
+        this.download = function() {
+            var node = this.contextFile;
+            $http({
+                url: 'http://127.0.0.1:8888/cat',
+                method: "POST",
+                data: {
+                    'filename': node[1],
+                    'parent': node[3]
+                }
+            }).then(function (response) {
+
+                var element = document.createElement('a');
+                element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(response.data[3]));
+                element.setAttribute('download', response.data[2]);
+
+                element.style.display = 'none';
+                document.body.appendChild(element);
+
+                element.click();
+
+                document.body.removeChild(element);
             });
         }
     }]
