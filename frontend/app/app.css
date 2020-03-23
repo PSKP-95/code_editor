@@ -118,3 +118,9 @@ textarea,pre {
     background-color: rgb(50, 52, 58);
     color: rgb(230, 225, 225);
 }
+
+.code{
+    font-size: 18px;
+    background-color: rgb(88, 84, 84);
+    color: rgb(247, 242, 242);
+}

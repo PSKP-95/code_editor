@@ -196,6 +196,13 @@ component('home', {
                 }
             }).then(function (response) {
                 self.loadDirUsingId(self.parent_id); // refresh directory
+                var interval = setInterval(function(){ 
+                     if(document.getElementById(filename) != null){
+                        document.getElementById(filename).click();
+                        clearInterval(interval);
+                     }
+                }, 500);
+                
                 toastr["success"]("File Creation Successful.", "File");
             });
         }
@@ -423,7 +430,7 @@ component('home', {
         this.deleteFile = function() {console.log(this.contextFile);
             $('#context-menu').hide();
 
-            if(window.confirm("Really Want to delete '" + this.contextFile[1] + "'. Deletion only hide file / Folder.")){
+            if(window.confirm("Really Want to delete '" + this.contextFile[1] + "'")){
                 $http({
                     url: 'http://127.0.0.1:8888/delete',
                     method: "POST",
@@ -433,11 +440,16 @@ component('home', {
                     }
                 }).then(function (response) {
                     console.log(response);
-                    if (response.data != "fail")
+                    if (response.data != "fail"){
+                        self.loadDirUsingId(self.parent_id); // refresh directory
                         toastr["success"](response.data + " nodes deleted.", "File");
+                        if(self.openfile_id == self.contextFile[0]){
+                            self.openfile = "";
+                            self.openfile_id = -1;
+                        }
+                    }
                     else
-                        toastr["error"]("Something Went Wrong", "File");
-                    self.loadDirUsingId(self.parent_id); // refresh directory
+                        toastr["error"]("Something Went Wrong", "File");   
                 });
             }
         }
@@ -518,6 +530,22 @@ component('home', {
                 element.click();
 
                 document.body.removeChild(element);
+            });
+        }
+
+        this.previewCode = "";
+        this.preview = function() {
+            var node = this.contextFile;
+            $http({
+                url: 'http://127.0.0.1:8888/cat',
+                method: "POST",
+                data: {
+                    'filename': node[1],
+                    'parent': node[3]
+                }
+            }).then(function (response) {
+                self.previewCode = response.data[3];
+                $('#previewModal').modal('show');
             });
         }
     }]

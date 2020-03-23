@@ -95,7 +95,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr class="clickable files" ng-repeat="child in $ctrl.children | filter:$ctrl.query" ng-if="child[2] < 2" ng-click="$ctrl.loadDir(child)" ng-mousedown="$ctrl.contextMenu(child,$event)" oncontextmenu="return false;" ng-model="$ctrl.children">
+          <tr class="clickable files" ng-repeat="child in $ctrl.children | filter:$ctrl.query" id="{{child[1]}}" ng-if="child[2] < 2" ng-click="$ctrl.loadDir(child)" ng-mousedown="$ctrl.contextMenu(child,$event)" oncontextmenu="return false;" ng-model="$ctrl.children">
             <td ng-if="child[2] == 0"><i class="fas fa-file"></i></td>
             <td ng-if="child[2] == 1"><i class="fas fa-folder"></i></td>
             <td ng-if="child[4] == 1" style="color: green;">{{child[1]}}</td>
@@ -109,6 +109,10 @@
       </div>
       <div class="dropdown-menu dropdown-menu-sm" id="context-menu">
         <table class="table-drop">
+          <tr ng-if="$ctrl.contextMenuFlag && $ctrl.fileOrFolder == 0" class="clickable dropdown-item" ng-click="$ctrl.preview()">
+            <td><i class="fas fa-eye"></i></td>
+            <td>Preview</td>
+          </tr>
           <tr ng-if="$ctrl.contextMenuFlag" class="clickable dropdown-item " ng-click="$ctrl.deleteFile()">
             <td><i class="fa fa-trash" aria-hidden="true"></i></td>
             <td>Delete</td>
@@ -210,6 +214,32 @@
       <!-- Modal footer -->
       <div class="modal-footer">
         <button type="button" ng-click="$ctrl.editorSetting()" class="btn btn-primary">Save changes</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+      
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="previewModal">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+    
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title">{{$ctrl.contextFile[1]}}</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      
+      <!-- Modal body -->
+      <div class="modal-body code">
+        <div>
+          <pre class="code"><code >{{$ctrl.previewCode}}</code></pre>
+        </div>
+      </div>
+      
+      <!-- Modal footer -->
+      <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
       </div>
       
