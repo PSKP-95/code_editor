@@ -52,8 +52,10 @@
   <i Title="Run Code in editor" ng-click="$ctrl.runcode()" class="fa fa-play btn btn-outline-danger clickable" aria-hidden="true"></i>
   <i Title="Add Note" ng-if="$ctrl.openfile != ''" type="button" data-toggle="modal" data-target="#myModal" class="fa fa-sticky-note btn btn-outline-success" aria-hidden="true"></i>
   <select class="btn" id="ext" ng-change="$ctrl.langChange()" ng-model="$ctrl.ext">
-    <option value=".cpp">CPP</option>
-    <option value=".py">Python</option>
+    <option value=".cpp14">C++14</option>
+    <option value=".cpp17">C++17</option>
+    <option value=".cpp11">C++11</option>
+    <option value=".py3">Python3</option>
     <option value=".c">C</option>
   </select>
   <select class="btn" id="theme" ng-change="$ctrl.themeChange()" ng-model="$ctrl.theme">

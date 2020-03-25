@@ -31,7 +31,7 @@ component('home', {
 
         this.input = ""; // input data expected from user
         this.output = ""; // output data
-        this.ext = ".cpp"; // default extension
+        this.ext = ".cpp14"; // default extension
         this.code = "";
         // running code
         this.runcode = function () {
@@ -64,11 +64,11 @@ component('home', {
             automaticLayout: true
         });
 
-        this.filetype = "cpp";
+        this.filetype = "C++14";
         this.langChange = function () {
-            if (this.ext == ".cpp") {
+            if (this.ext == ".cpp" || this.ext == ".cpp11" || this.ext == ".cpp14" || this.ext == ".cpp17") {
                 this.filetype = "cpp";
-            } else if (this.ext == ".py") {
+            } else if (this.ext == ".py" || this.ext == ".py3") {
                 this.filetype = "python";
             } else {
                 this.filetype = "c";
@@ -123,6 +123,7 @@ component('home', {
             for (var i = 0; i < this.stack.length; i++) {
                 this.openfile_path += this.stack[i][0] + "/";
             }
+            this.openfile_path += this.parent + "/";
             this.openfile_path += node[1];
             $http({
                 url: 'http://127.0.0.1:8888/cat',
@@ -260,7 +261,10 @@ component('home', {
                         "content": this.code
                     }
                 }).then(function (response) {
-                    toastr["success"]("File Saved Successfully", "File");
+                    if(response.data == "file not exist")
+                        toastr["error"]("file not found. may be deleted. refresh page", "File");
+                    else
+                        toastr["success"]("file successfully saved", "File");
                 });
             } else {
                 this.createFile(this.editor.getValue("code"));
@@ -326,7 +330,8 @@ component('home', {
                     method: "POST",
                     data: {
                         "node_id": this.openfile_id,
-                        "parent": this.openfile[3]
+                        "parent": this.openfile[3],
+                        "ext": this.ext
                     }
                 }).then(function (response) {
                     self.testcases = response.data;

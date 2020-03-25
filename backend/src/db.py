@@ -87,14 +87,14 @@ def get_dir_content(dir_id):
 
 	return json.dumps(data)
 
-def check_dir(folder,parent):
+def check_dir(node,parent):
 	conn, cur = connection()
 
 	sql = "select * from bucket where parent = %s and node = %s"
 
 	if DATABASE == "sqlite3":
 		sql = sql.replace("%s","?")
-	args = (parent,folder)
+	args = (parent,node)
 
 	cur.execute(sql,args)
 	data = cur.fetchall()
@@ -202,7 +202,7 @@ def add_content(filename, parent, content):
 
 	args = (content, filename, parent)
 
-	cur.execute(sql,args)
+	print(cur.execute(sql,args))
 
 	# if you are writing to db then commit and close required
 	conn.commit()

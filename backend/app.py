@@ -9,7 +9,10 @@ cors = CORS(app, resources={r"/*": {"origins": "*"}})
 
 @app.route('/run',methods=['POST','GET'])
 def run_it():
-	return run.run(request.json["code"],request.json["input"],request.json["ext"])
+	code = request.json["code"]
+	input_data = request.json["input"]
+	ext = request.json["ext"]
+	return run.run(code,input_data,ext)
 
 @app.route('/dir',methods=['POST','GET'])
 def dir_content():
@@ -66,8 +69,8 @@ def loadtests():
 def runtests():
 	file_id = request.json["node_id"]
 	parent = request.json["parent"]
-	
-	return run.run_testcases(file_id,parent)
+	ext = request.json["ext"]
+	return run.run_testcases(file_id,parent,ext)
 
 @app.route('/updateflag',methods=['POST','GET'])
 def updateflag():

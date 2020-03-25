@@ -11,6 +11,9 @@ You can find this [here](https://github.com/PSKP-95/code_rtc/wiki/Installation)
 - [ ] Export files
 - [ ] Import Folders/Files
 
+## Testing
+This application is tensted on Ubuntu 19.10 with Firefox
+
 ## mysql and sqlite3
 Need to just change `DATABASE` in `code_rtc/backend/src/db.py`
 - mysql : for mysql / mariadb
