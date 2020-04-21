@@ -38,6 +38,7 @@ textarea,pre {
     width: 100%;
     height: 5vh;
     padding: 10px;
+    margin-bottom: 15px;
 }
 
 
@@ -56,7 +57,7 @@ textarea,pre {
 }
 
 #code {
-    height: 69vh;
+    height: 71vh;
     border: 1px solid black;
 }
 

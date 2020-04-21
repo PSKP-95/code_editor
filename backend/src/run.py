@@ -32,11 +32,11 @@ def get_command(fcode,finput,foutput,ext):
     if ext == '.py3':
         return ["python " + fcode + " < " + finput + " > " + foutput + " 2>&1 "]
     elif ext == '.cpp14':
-        return ["g++ -std=c++14 " + fcode + " 2> " + foutput, "./a.out < " + finput + " > " + foutput + " 2>&1 "]
+        return ["g++ -I/opt/boost/include -std=c++14 -pthread -fopenmp " + fcode + " 2> " + foutput, "./a.out < " + finput + " > " + foutput + " 2>&1 "]
     elif ext == '.cpp11':
-        return ["g++ -std=c++11 " + fcode + " 2> " + foutput, "./a.out < " + finput + " > " + foutput + " 2>&1 "]
+        return ["g++ -std=c++11 -pthread -fopenmp " + fcode + " 2> " + foutput, "./a.out < " + finput + " > " + foutput + " 2>&1 "]
     elif ext == '.cpp17':
-        return ["g++ -std=c++17 " + fcode + " 2> " + foutput, "./a.out < " + finput + " > " + foutput + " 2>&1 "]
+        return ["g++ -std=c++17 -pthread -fopenmp " + fcode + " 2> " + foutput, "./a.out < " + finput + " > " + foutput + " 2>&1 "]
     elif ext == ".c":
         return ["gcc " + fcode + " 2> " + foutput, "./a.out < " + finput + " > " + foutput + " 2>&1 "]
 

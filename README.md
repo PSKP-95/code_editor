@@ -43,4 +43,11 @@ Need to just change `DATABASE` in `code_rtc/backend/src/db.py`
     FOREIGN KEY (node_id)
     REFERENCES bucket(node_id)
 );`
+
+### Create Drive
 `
+insert into bucket(
+  node_id,
+  type,
+  node,
+  parent) values(1,1,'root',0);`

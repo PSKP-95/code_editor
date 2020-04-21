@@ -120,9 +120,18 @@ component('home', {
             this.openfile_id = node[0];
             this.openfile_path = "";
             // this.noteEditor.setData("");
-            for (var i = 0; i < this.stack.length; i++) {
-                this.openfile_path += this.stack[i][0] + "/";
+            var flag = true;
+            for (var i = this.stack.length - 1; i > 0; i--) {
+                if(this.openfile_path.length + this.parent.length + node[1].length > 80){
+                    flag = false;
+                    break;
+                }
+                this.openfile_path = this.stack[i][0] + "/"  + this.openfile_path;
             }
+            if(!flag)
+                this.openfile_path = "../" + this.openfile_path;
+            else   
+                this.openfile_path = "/" + this.openfile_path;
             this.openfile_path += this.parent + "/";
             this.openfile_path += node[1];
             $http({
