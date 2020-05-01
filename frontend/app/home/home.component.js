@@ -413,6 +413,9 @@ component('home', {
                 return false; 
             }
         }
+        $('body').bind('contextmenu', function(e) {
+            return false;
+        }); 
         $(document).click(function() {
             $('#context-menu').hide();
         });
