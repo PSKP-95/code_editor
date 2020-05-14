@@ -134,6 +134,8 @@ component('home', {
                 this.openfile_path = "/" + this.openfile_path;
             this.openfile_path += this.parent + "/";
             this.openfile_path += node[1];
+            if(this.openfile_path.length > 40)
+                this.openfile_path = ".." + this.openfile_path.substring(this.openfile_path.length-80,this.openfile_path.length);
             $http({
                 url: 'http://127.0.0.1:8888/cat',
                 method: "POST",
