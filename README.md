@@ -1,6 +1,34 @@
 # Code - RTC
 ## Installation & Information
-You can find this [here](https://github.com/PSKP-95/code_rtc/wiki/Installation)
+### Linux
+
+#### Step 1
+
+Clone Repository
+
+`git clone https://github.com/PSKP-95/code_rtc.git`
+
+#### Step 2
+
+Setup Database. In **backend/data** folder create sqlite3 database file
+
+`sqlite3  code_RTC.db`
+
+#### Step 3
+
+Start flask server. Open terminal in **backend**
+
+```bash
+set FLASK_APP=app.py
+python -m flask run --port=8888
+```
+
+Start angularJS client. Open terminal in **frontend**
+
+```bash
+npm start
+```
+
 ## To Do
 - [x] Creating Code
 - [x] Running Code on user input
@@ -12,7 +40,7 @@ You can find this [here](https://github.com/PSKP-95/code_rtc/wiki/Installation)
 - [ ] Import Folders/Files
 
 ## Testing
-This application is tensted on Ubuntu 19.10 with Firefox
+This application is tested on Ubuntu 19.10 and Ubuntu 20.04 with Firefox Web Browser
 
 ## mysql and sqlite3
 Need to just change `DATABASE` in `code_rtc/backend/src/db.py`
