@@ -8,7 +8,7 @@ You can find this [here](https://github.com/PSKP-95/code_rtc/wiki/Installation)
 - [x] Running on Testcases
 - [x] File explorer
 - [x] Context menu for File explorer with delete, cut, rename, paste.
-- [ ] Export files
+- [x] Export files
 - [ ] Import Folders/Files
 
 ## Testing
@@ -44,10 +44,6 @@ Need to just change `DATABASE` in `code_rtc/backend/src/db.py`
     REFERENCES bucket(node_id)
 );`
 
-### Create Drive
-`
-insert into bucket(
-  node_id,
-  type,
-  node,
-  parent) values(1,1,'root',0);`
+## Demo
+
+See Video on Youtube https://www.youtube.com/watch?v=QwXDyiKYOas
