@@ -47,3 +47,7 @@ Need to just change `DATABASE` in `code_rtc/backend/src/db.py`
 ## Demo
 
 See Video on Youtube https://www.youtube.com/watch?v=QwXDyiKYOas
+
+## License
+
+[Free Software: GNU General Public License v3.0](https://github.com/PSKP-95/code_rtc/blob/master/LICENSE)
