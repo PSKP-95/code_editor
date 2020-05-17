@@ -419,3 +419,40 @@ def save_note(node_id, note):
 		conn.commit()
 		conn.close()
 	return "success"
+
+def delete_test(test_id):
+	conn, cur = connection()
+
+	sql = """delete from tests where test_id= %s"""
+
+	if DATABASE == "sqlite3":
+		sql = sql.replace("%s","?")
+
+	args = (test_id,)
+
+	try:
+		cur.execute(sql,args)
+	except:
+		return "fail"
+	finally:
+		conn.commit()
+		conn.close()
+	return "success"
+
+def update_testcase(test_id, input_data, output):
+	conn, cur = connection()
+
+	sql = """update tests set input = %s, output = %s where test_id = %s"""
+
+	if DATABASE == "sqlite3":
+		sql = sql.replace("%s","?")
+	
+	args = (input_data, output, test_id)
+
+	cur.execute(sql,args)
+
+	# if you are writing to db then commit and close required
+	conn.commit()
+	conn.close()
+
+	return "testcase added successfully"

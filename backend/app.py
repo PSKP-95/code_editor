@@ -103,6 +103,19 @@ def cutpaste():
 	parent = request.json["parent"]
 	return db.cut_paste(node_id, parent)
 
+@app.route('/deltest',methods=['POST','GET'])
+def deleteTest():
+	test_id = request.json["test_id"]
+	return db.delete_test(test_id)
+
+@app.route('/updatetest',methods=['POST','GET'])
+def updatetest():
+	test_id = request.json["test_id"]
+	input_data = request.json["input"]
+	output = request.json["output"]
+	
+	return db.add_testcase(test_id,input_data,output)
+
 @app.route('/',methods=['POST','GET'])
 def index():
 	(flag, username) = secure.check_session(session)   # check session for user's login

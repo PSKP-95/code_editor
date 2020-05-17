@@ -148,7 +148,7 @@
     <div>
       <div class="testcase">
         <ol>
-          <li class="clickable" ng-repeat="test in $ctrl.testcases" ng-click="$ctrl.showTest(test)">
+          <li class="clickable" ng-repeat="test in $ctrl.testcases" ng-click="$ctrl.showTest(test)" ng-mousedown="$ctrl.contextMenuTestCases(test,$event)" oncontextmenu="return false;">
             <i title="Running" ng-if="test[5] == -1" class="fas fa-clock"></i>
             <i title="Not Examined" ng-if="test[5] == 0" style="color: blue;" class="fas fa-question-circle"></i>
             <i title="AC" ng-if="test[5] == 1" style="color: green;" class="fas fa-check-circle"></i>
@@ -156,6 +156,14 @@
           </li>
         </ol>
       </div>
+      <div class="dropdown-menu dropdown-menu-sm" id="context-test">
+        <table class="table-drop">
+          <tr ng-if="$ctrl.contextMenuFlag" class="clickable dropdown-item" ng-click="$ctrl.deleteTest()">
+            <td><i class="fa fa-trash" aria-hidden="true"></i></td>
+            <td>Delete</td>
+          </tr>
+        </table>
+        </div>
     </div>
   </div>
 

@@ -403,6 +403,7 @@ component('home', {
                 this.contextMenuFlag = true;
             }
             $('#context-menu').hide();
+            $('#context-test').hide();
             if (e.which == 3) {
                 var top = e.pageY - 75;
                 var left = e.pageX;
@@ -415,11 +416,36 @@ component('home', {
                 return false; 
             }
         }
+
+        this.testSelected = null;
+        this.contextMenuTestCases = function (test, e) {
+            
+            if(test == null){
+                this.contextMenuFlag = false;
+            } else {
+                this.testSelected = test;
+                this.contextMenuFlag = true;
+            }
+            $('#context-menu').hide();
+            $('#context-test').hide();
+            if (e.which == 3) {
+                var top = e.pageY - 75;
+                var left = e.pageX;
+                $("#context-test").css({
+                  display: "block",
+                  top: top,
+                  left: left
+                }).addClass("show");
+                return false; 
+            }
+        }
+
         $('body').bind('contextmenu', function(e) {
             return false;
         }); 
         $(document).click(function() {
             $('#context-menu').hide();
+            $('#context-test').hide();
         });
 
         // rename file properties 
@@ -567,5 +593,24 @@ component('home', {
                 $('#previewModal').modal('show');
             });
         }
+
+        this.deleteTest = function() {
+            $http({
+                url: 'http://127.0.0.1:8888/deltest',
+                method: "POST",
+                data: {
+                    'test_id': this.testSelected[0]
+                }
+            }).then(function (response) {
+                if (response.data != "fail"){
+                    toastr["success"]("Test Deleted Successfully.", "Testcase");
+                    self.loadAllTestCases();
+                    self.testSelected = null;
+                }
+                else
+                    toastr["error"]("Something Went Wrong", "Testcase");
+            });
+        }
+
     }]
 });
