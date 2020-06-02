@@ -70,6 +70,9 @@ component('home', {
         // flag for AC, WA, TLE, RE
         this.flag = null;
 
+        // tabs
+        this.tabs = [];
+
         /******************
          * Other Variables
          ******************/
@@ -248,7 +251,33 @@ component('home', {
                         toastr["success"]("File Loading Successful.", "File");
                     }
                 });
-                
+
+                for (const e of self.tabs) {
+                    e.current = 0;
+                    if(e.openfile_id == self.openfile_id){
+                        e.filetype = self.filetype;
+                        e.openfile = self.openfile;
+                        e.openfile_path = self.openfile_path;
+                        e.testcases = self.testcases;
+                        e.flag = self.flag;
+                        e.current = 1;
+                        e.note = self.note;
+                        e.content = self.code;
+                        return;
+                    }
+                }
+                var tab = {
+                    filetype: self.filetype,
+                    openfile: self.openfile,
+                    openfile_path: self.openfile_path,
+                    openfile_id: self.openfile_id,
+                    testcases: self.testcases,
+                    flag: self.flag,
+                    current: 1,
+                    note: self.note,
+                    content: self.editor.getValue("code")
+                }
+                self.tabs.push(tab);
             });
         }
 
@@ -756,5 +785,133 @@ component('home', {
             });
         }
 
+        /**********************
+         * Open File Varibles
+         **********************/
+
+        // starting filetype
+        this.filetype = "C++14";
+
+        // open file in editor
+        this.openfile = "";
+
+        // current file name file path
+        this.openfile_path = "";
+
+        // id of open file in editor
+        this.openfile_id = -1;
+
+        // testcases list
+        this.testcases = [];
+
+        // flag for AC, WA, TLE, RE
+        this.flag = null;
+
+        this.note = null;
+
+        // tab
+        this.createNewTab = function() {
+            var tmp ;
+            tmp = {
+                filetype: this.filetype,
+                openfile: this.openfile,
+                openfile_path: this.openfile_path,
+                openfile_id: this.openfile_id,
+                testcases: this.testcases,
+                flag: this.flag,
+                current: 0,
+                note: this.noteEditor.getData(),
+                content: this.editor.getValue("code")
+            }
+            console.log(tmp);
+            return tmp;
+        }
+        var tmpTab = this.createNewTab();
+        tmpTab.current = 1;
+        this.tabs = [tmpTab];
+
+        this.resetFileProperties = function() {
+            // starting filetype
+            this.filetype = "C++14";
+
+            // open file in editor
+            this.openfile = "";
+
+            // current file name file path
+            this.openfile_path = "";
+
+            // id of open file in editor
+            this.openfile_id = -1;
+
+            // testcases list
+            this.testcases = [];
+
+            // flag for AC, WA, TLE, RE
+            this.flag = null;
+        }
+
+        this.changeTab = function(file_id) {
+            var tmp = null;
+            for (const e of this.tabs) {
+                if(e.current == 1 && e.openfile_id == file_id)
+                    return;
+                if(e.current == 1){
+                    e.current = 0;
+                    e.content = this.editor.getValue("code");
+                }
+                if(e.openfile_id == file_id){
+                    e.current = 1;
+                    tmp = e;
+                }
+            }
+            this.setFileProperties(tmp);
+        }
+
+        this.setFileProperties = function(tab) {
+            this.filetype = tab.filetype;
+            this.openfile = tab.openfile;
+            this.openfile_path = tab.openfile_path;
+            this.openfile_id = tab.openfile_id;
+            this.testcases = tab.testcases;
+            this.note = tab.note;
+            this.noteEditor.setData(this.note, {
+                callback: function() {
+                }
+            });
+            this.flag = tab.flag;
+            this.editor.setValue(tab.content);
+        }
+
+        this.addNewTab = function(id) {
+            for (const e of this.tabs) {
+                if(e.openfile_id == id){
+                    this.changeTab(id);
+                    return;
+                }
+            }
+            this.tabs.push(this.createNewTab());
+            this.resetFileProperties();
+            self.editor.setValue("");
+        }        
+        
+        this.removeTab = function(id) {
+            var index = 0;
+            if(id == -1)
+                return;
+            var tmp = null, flag = true;
+            for (const e of this.tabs) {
+                if(e.openfile_id == id){
+                    if(e.current == 1)
+                        flag = false;
+                    this.tabs.splice(index,1);
+                    break;
+                } else {
+                    tmp = e;
+                }
+                index ++;
+            }
+            if(!flag)
+                tmp.current = 1;
+        }
     }]
 });

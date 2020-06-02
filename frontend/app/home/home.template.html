@@ -170,9 +170,18 @@
   <div class="col-lg-10 nopadding">
     <div>
       <ul class="tabs-ul">
-        <li>Hi <i class="fa fa-times" aria-hidden="true"></i></li>
-        <li>Hi <i class="fa fa-times" aria-hidden="true"></i></li>
-        <li>Hi <i class="fa fa-times" aria-hidden="true"></i></li>
+        <li class="clickable" ng-repeat="tab in $ctrl.tabs">
+          <span ng-if="tab.current == 1" class="selected" ng-click="$ctrl.changeTab(tab.openfile_id)">
+            <span ng-if="tab.openfile == ''">Untitled</span>
+            <span ng-if="tab.openfile != ''">{{tab.openfile[1]}}</span>
+          </span>
+          <span ng-if="tab.current != 1" ng-click="$ctrl.changeTab(tab.openfile_id)">
+            <span ng-if="tab.openfile == ''">Untitled</span>
+            <span ng-if="tab.openfile != ''">{{tab.openfile[1]}}</span>
+          </span> 
+          &nbsp;<i ng-click="$ctrl.removeTab(tab.openfile_id)" class="fa fa-times" aria-hidden="true"></i>
+        </li>
+        <li class="clickable" ng-click="$ctrl.addNewTab(-1)"><i class="fa fa-plus" aria-hidden="true"></i></li>
       </ul>
     </div>
     <div id="code"></div>
