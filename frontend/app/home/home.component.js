@@ -26,6 +26,11 @@ component('home', {
             "showMethod": "fadeIn",
             "hideMethod": "fadeOut"
         }
+
+        /************************
+         * Variable Declarations
+         ************************/
+        
         // for getting access in http request
         var self = this;
 
@@ -33,8 +38,96 @@ component('home', {
         this.output = ""; // output data
         this.ext = ".cpp14"; // default extension
         this.code = "";
-        // running code
+
+        // codearea
+        this.editor = monaco.editor.create(document.getElementById('code'), {
+            value: "",
+            theme: "vs-dark",
+            language: 'cpp',
+            fontSize: 20,
+            automaticLayout: true
+        });
+
+        // starting filetype
+        this.filetype = "C++14";
+
+        // Theme of editor
+        this.theme = "vs-dark";
+
+        // stack for point current and its path
+        // e.g. ['D','engg','sem 5'] means /D/engg/sem \5/
+        this.stack = [];
+
+        // parent of current opened directory in file explorer
+        this.parent_id = 1;
+
+        // parent name
+        this.parent = "root";
+
+        // files and folders in current directory
+        this.children = [];
+
+        // open file in editor
+        this.openfile = "";
+
+        // current file name file path
+        this.openfile_path = "";
+
+        // id of open file in editor
+        this.openfile_id = -1;
+
+        // initial load root directory
+        $http({
+            url: 'http://127.0.0.1:8888/dir',
+            method: "POST",
+            data: {
+                'dir_id': self.parent_id
+            }
+        }).then(function (response) {
+            self.children = response.data;
+            self.children.sort(function (a, b) {
+                return b[2] - a[2]
+            });
+        });
+
+        // testcases list
+        this.testcases = [];
+
+        // flag for AC, WA, TLE, RE
+        this.flag = null;
+
+        //query in searchbox
+        this.query;
+        // search box showing or not
+        this.searchbox = "none";
+
+        // file on which right clicked
+        this.contextFile = null;
+        // where is right clicked
+        this.contextMenuFlag = false;
+        // file = 0 amd folder = 1
+        this.fileOrFolder = -1;
+
+        // which test case right clicked
+        this.testSelected = null;
+
+        //clipboard or copied file data
+        this.clipboard = {
+            "data_available": false,
+            "data":null
+        }
+
+        // preview code by right clicking on file
+        this.previewCode = "";
+
+        /************************
+         * Functions
+         ************************/
         this.runcode = function () {
+            /**
+             * Runs Code in Editor
+             */
+
             var c = this.editor.getValue("code");
 
             if (c == "") {
@@ -55,17 +148,11 @@ component('home', {
             });
         }
 
-        // codearea
-        this.editor = monaco.editor.create(document.getElementById('code'), {
-            value: "",
-            theme: "vs-dark",
-            language: 'cpp',
-            fontSize: 20,
-            automaticLayout: true
-        });
-
-        this.filetype = "C++14";
         this.langChange = function () {
+            /**
+             * Changing language of code in editor
+             */
+
             if (this.ext == ".cpp" || this.ext == ".cpp11" || this.ext == ".cpp14" || this.ext == ".cpp17") {
                 this.filetype = "cpp";
             } else if (this.ext == ".py" || this.ext == ".py3") {
@@ -76,35 +163,21 @@ component('home', {
             monaco.editor.setModelLanguage(this.editor.getModel(), this.filetype);
         }
 
-        this.theme = "vs-dark";
         this.themeChange = function () {
+            /**
+             * Changing Theme of Editor
+             */
             monaco.editor.setTheme(this.theme);
         }
-        // explorer
 
-        // stack for point current and its path
-        // e.g. ['D','engg','sem 5'] means /D/engg/sem \5/
-        this.stack = [];
-        this.parent_id = 1;
-        this.parent = "root";
-        this.children = [];
-        this.openfile = "";
-        this.openfile_path = "";
-        this.openfile_id = -1;
-        $http({
-            url: 'http://127.0.0.1:8888/dir',
-            method: "POST",
-            data: {
-                'dir_id': self.parent_id
-            }
-        }).then(function (response) {
-            self.children = response.data;
-            self.children.sort(function (a, b) {
-                return b[2] - a[2]
-            });
-        });
+        /**************************
+         * File Explorer Section
+         **************************/
 
         this.loadDir = function (child) {
+            /**
+             * Load clicked directory if directory
+             */
             if (child[2] == 1) { // if folder
                 this.stack.push([this.parent, this.parent_id]);
                 this.parent = child[1];
@@ -116,6 +189,9 @@ component('home', {
         }
 
         this.loadFile = function (node) {
+            /**
+             * Load clicked file if file
+             */
             this.openfile = node;
             this.openfile_id = node[0];
             this.openfile_path = "";
@@ -170,6 +246,9 @@ component('home', {
         }
 
         this.back = function () {
+            /**
+             * Go to one directory up/back
+             */
             if (this.stack.length == 0)
                 return;
             var tmp = this.stack.pop();
@@ -179,6 +258,10 @@ component('home', {
         }
 
         this.loadDirUsingId = function (id) {
+            /**
+             * Load files and folders in directory in 
+             * file explorer whose id is passed
+             */
             $http({
                 url: 'http://127.0.0.1:8888/dir',
                 method: "POST",
@@ -195,6 +278,11 @@ component('home', {
 
         // creat new file in current directory
         this.createFile = function (content) {
+            /**
+             * Create New File in current Directory
+             * content of whose content is given
+             * if not given then blank file
+             */
             var filename = prompt("Enter Filename");
             if (filename == null)
                 return;
@@ -220,6 +308,9 @@ component('home', {
         }
 
         this.createDir = function () {
+            /**
+             * Create Directory in current directory
+             */
             var dir_name = prompt("Enter folder name", "");
             if (dir_name == "") {
                 toastr["error"]("Directory Name is Empty.", "Folder");
@@ -260,6 +351,10 @@ component('home', {
         }, false);
 
         this.saveFile = function () {
+            /**
+             * Save file to server
+             */
+
             this.code = this.editor.getValue("code");
 
             if (this.openfile != "") {
@@ -282,9 +377,16 @@ component('home', {
             }
         }
 
-        // testcases
-        this.testcases = [];
+        /*******************************
+         * Testcases for testing code
+         *******************************/  
+
         this.addTestCase = function () {
+            /**
+             * Add New test case for currently opened file
+             * Testcase input and output taken from 
+             * standard input and output
+             */
             if (this.input == "" && this.output == "") {
                 toastr["error"]("Both input and output empty.", "Testcases");
                 return;
@@ -309,6 +411,9 @@ component('home', {
 
         // loads all testcases of current file or when file loaded testcases get loaded
         this.loadAllTestCases = function () {
+            /**
+             * When file opened all testcases are get loaded
+             */
             if (this.openfile != "") {
                 $http({
                     url: 'http://127.0.0.1:8888/loadtests',
@@ -323,11 +428,17 @@ component('home', {
         }
 
         this.showTest = function (test) {
+            /**
+             * Show testcases in standard input and output
+             */
             this.input = test[2];
             this.output = test[3];
         }
 
         this.runOnTestCases = function () {
+            /**
+             * Run currently opened file on testcases saved
+             */
             if (this.code != this.editor.getValue("code")) {
                 toastr["error"]("File not saved", "File");
                 return;
@@ -353,8 +464,11 @@ component('home', {
         }
 
         // flag for AC, WA, TLE, RE
-        this.flag = null;
         this.flagChange = function () {
+            /**
+             * Change flag related to file
+             * i.e. code accepted/wrong answer etc
+             */
             if (this.openfile != "") {
                 $http({
                     url: 'http://127.0.0.1:8888/updateflag',
@@ -374,8 +488,6 @@ component('home', {
             }
         }
 
-        this.query;
-        this.searchbox = "none";
         $(".searchbox").css("display", this.searchbox);
         // search within folder
         this.search = function () {
@@ -389,13 +501,11 @@ component('home', {
             }
         }
 
-        this.contextFile = null;
-        this.contextMenuFlag = false;
-        // file = 0 amd folder = 1
-        this.fileOrFolder = -1;
         // context menu / right click option for file explorer
         this.contextMenu = function (child, e) {
-            
+            /**
+             * Context / right click menu in file explorer
+             */
             if(child == null){
                 this.contextMenuFlag = false;
             } else {
@@ -417,9 +527,10 @@ component('home', {
             }
         }
 
-        this.testSelected = null;
         this.contextMenuTestCases = function (test, e) {
-            
+            /**
+             * Right click/context menu in test case section
+             */
             if(test == null){
                 this.contextMenuFlag = false;
             } else {
@@ -440,9 +551,16 @@ component('home', {
             }
         }
 
+        /**
+         * Remove default browser context menu
+         */
         $('body').bind('contextmenu', function(e) {
             return false;
         }); 
+
+        /**
+         * Close context menu when anywhere on screen clicked
+         */
         $(document).click(function() {
             $('#context-menu').hide();
             $('#context-test').hide();
@@ -450,6 +568,9 @@ component('home', {
 
         // rename file properties 
         this.editFile = function(file) {
+            /**
+             * Edit file Name
+             */
             $('#context-menu').hide();
             var name = prompt("Enter new Filename");
             
@@ -473,6 +594,9 @@ component('home', {
 
         // delete file
         this.deleteFile = function() {console.log(this.contextFile);
+            /**
+             * Delete file from file explorer
+             */
             $('#context-menu').hide();
 
             if(window.confirm("Really Want to delete '" + this.contextFile[1] + "'")){
@@ -499,12 +623,11 @@ component('home', {
             }
         }
 
-        this.clipboard = {
-            "data_available": false,
-            "data":null
-        }
         // copy file 
         this.copyFile = function() {
+            /**
+             * Copies file to clipboard
+             */
             if(this.clipboard.data_available && window.confirm("Really Want to paste '" + this.clipboard.data[1] + "' to '" + this.parent + "' . Will remove file / Folder.")){  // paste
                 this.clipboard.data_available = false;
                 $http({
@@ -528,6 +651,9 @@ component('home', {
         }
 
         this.saveNote = function() {
+            /**
+             * Saves note related to current opened file
+             */
             $('#myModal').modal('hide');
             this.note = this.noteEditor.getData();
             $http({
@@ -546,15 +672,18 @@ component('home', {
         }
 
         this.editorSetting = function() {
+
             $('#editorSetting').modal('hide');
             this.editor.updateOptions({
                 lineNumbers: "off",
                 fontSize: 10
-                
             });
         }
 
         this.download = function() {
+            /**
+             * Download File for file explorer
+             */
             var node = this.contextFile;
             $http({
                 url: 'http://127.0.0.1:8888/cat',
@@ -578,8 +707,12 @@ component('home', {
             });
         }
 
-        this.previewCode = "";
+        
         this.preview = function() {
+            /**
+             * Preview file by right clicking on file
+             * in file explorer
+             */
             var node = this.contextFile;
             $http({
                 url: 'http://127.0.0.1:8888/cat',
@@ -595,6 +728,10 @@ component('home', {
         }
 
         this.deleteTest = function() {
+            /**
+             * Delete testcase by right clicking on it
+             * form test case area
+             */
             $http({
                 url: 'http://127.0.0.1:8888/deltest',
                 method: "POST",
