@@ -251,7 +251,7 @@ component('home', {
                         toastr["success"]("File Loading Successful.", "File");
                     }
                 });
-
+                var flag = true;
                 for (const e of self.tabs) {
                     e.current = 0;
                     if(e.openfile_id == self.openfile_id){
@@ -263,9 +263,11 @@ component('home', {
                         e.current = 1;
                         e.note = self.note;
                         e.content = self.code;
-                        return;
+                        flag = false;
                     }
                 }
+                if(!flag)
+                    return;
                 var tab = {
                     filetype: self.filetype,
                     openfile: self.openfile,
@@ -910,8 +912,10 @@ component('home', {
                 }
                 index ++;
             }
-            if(!flag)
+            if(!flag){
                 tmp.current = 1;
+                this.setFileProperties(tmp);
+            }
         }
     }]
 });
