@@ -48,9 +48,31 @@ component('home', {
             automaticLayout: true
         });
 
+        /**********************
+         * Open File Varibles
+         **********************/
+
         // starting filetype
         this.filetype = "C++14";
 
+        // open file in editor
+        this.openfile = "";
+
+        // current file name file path
+        this.openfile_path = "";
+
+        // id of open file in editor
+        this.openfile_id = -1;
+
+        // testcases list
+        this.testcases = [];
+
+        // flag for AC, WA, TLE, RE
+        this.flag = null;
+
+        /******************
+         * Other Variables
+         ******************/
         // Theme of editor
         this.theme = "vs-dark";
 
@@ -67,15 +89,6 @@ component('home', {
         // files and folders in current directory
         this.children = [];
 
-        // open file in editor
-        this.openfile = "";
-
-        // current file name file path
-        this.openfile_path = "";
-
-        // id of open file in editor
-        this.openfile_id = -1;
-
         // initial load root directory
         $http({
             url: 'http://127.0.0.1:8888/dir',
@@ -89,12 +102,6 @@ component('home', {
                 return b[2] - a[2]
             });
         });
-
-        // testcases list
-        this.testcases = [];
-
-        // flag for AC, WA, TLE, RE
-        this.flag = null;
 
         //query in searchbox
         this.query;
