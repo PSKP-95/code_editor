@@ -125,3 +125,19 @@ textarea,pre {
     background-color: rgb(88, 84, 84);
     color: rgb(247, 242, 242);
 }
+
+.tabs-ul{
+    padding: 2px 0px 2px 0px;
+    margin-left: 0px;
+    margin-bottom: 1px;
+    border-top: 1px solid black;
+    background-color: rgb(255, 255, 255);
+}
+
+.tabs-ul li{
+    background-color: rgb(255, 255, 255);
+    padding: 2px 5px 2px 5px;
+    list-style: none; 
+    display: inline;
+    box-shadow: 1px 2px rgb(15, 15, 15);;
+}
