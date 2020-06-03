@@ -53,7 +53,7 @@ component('home', {
          **********************/
 
         // starting filetype
-        this.filetype = "C++14";
+        this.filetype = "cpp";
 
         // open file in editor
         this.openfile = "";
@@ -631,7 +631,7 @@ component('home', {
         }
 
         // delete file
-        this.deleteFile = function() {console.log(this.contextFile);
+        this.deleteFile = function() {
             /**
              * Delete file from file explorer
              */
@@ -646,14 +646,12 @@ component('home', {
                         "type": this.contextFile[2]
                     }
                 }).then(function (response) {
-                    console.log(response);
                     if (response.data != "fail"){
                         self.loadDirUsingId(self.parent_id); // refresh directory
                         toastr["success"](response.data + " nodes deleted.", "File");
-                        if(self.openfile_id == self.contextFile[0]){
-                            self.openfile = "";
-                            self.openfile_id = -1;
-                        }
+                        response.data.forEach(e => {
+                            self.removeTab(e);
+                        });
                     }
                     else
                         toastr["error"]("Something Went Wrong", "File");   
@@ -825,7 +823,6 @@ component('home', {
                 note: this.noteEditor.getData(),
                 content: this.editor.getValue("code")
             }
-            console.log(tmp);
             return tmp;
         }
         var tmpTab = this.createNewTab();

@@ -170,7 +170,7 @@
   <div class="col-lg-10 nopadding">
     <div>
       <ul class="tabs-ul">
-        <li class="clickable" ng-repeat="tab in $ctrl.tabs">
+        <li class="clickable" ng-repeat="tab in $ctrl.tabs" title="{{tab.openfile_path}}">
           <span ng-if="tab.current == 1" class="selected" ng-click="$ctrl.changeTab(tab.openfile_id)">
             <span ng-if="tab.openfile == ''">Untitled</span>
             <span ng-if="tab.openfile != ''">{{tab.openfile[1]}}</span>
