@@ -357,7 +357,7 @@ def delete_node(node_id,node_type):
 	finally:
 		conn.commit()
 		conn.close()
-	return str(len(node_ids))
+	return json.dumps(node_ids)
 
 
 def rename_node(node_id,new_name):
