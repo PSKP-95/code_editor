@@ -1,6 +1,8 @@
-# Code - RTC
+# Code - RTC 
+
 ## Installation & Information
-### Linux
+
+### Linux Latest Version
 
 #### Step 1
 
@@ -18,11 +20,23 @@ Setup Database. In **backend/data** folder create sqlite3 database file
 sqlite3  code_RTC.db
 ```
 
+### PyPi (Last Release)
+
+```bash
+pip install code-rtc
+```
+
+Then run application using console
+
+```bash
+code-rtc
+```
+
 ##### Schema for Sqlite3
 
 ###### for bucket
 
-```sqlite
+```sql
 CREATE TABLE bucket (
   node_id integer PRIMARY KEY AUTOINCREMENT,
   type int(2) NOT NULL,
@@ -38,7 +52,7 @@ CREATE TABLE bucket (
 
 ###### for tests
 
-```sqlite
+```sql
 CREATE TABLE tests (
   test_id integer PRIMARY KEY AUTOINCREMENT,
   type int(1) NOT NULL,
@@ -78,9 +92,10 @@ npm start
 - [x] Context menu for File explorer with delete, cut, rename, paste.
 - [x] Export files
 - [ ] Import Folders/Files
+- [x] Tab System
 
 ## Testing
-This application is tested on Ubuntu 19.10 and Ubuntu 20.04 with Firefox Web Browser
+This application is tested on Ubuntu 19.10, Ubuntu 20.04, Windows 10 with Firefox Web Browser
 
 ## mysql and sqlite3
 Need to just change `DATABASE` in `code_rtc/backend/src/db.py`
@@ -89,7 +104,7 @@ Need to just change `DATABASE` in `code_rtc/backend/src/db.py`
 
 ## Demo
 
-See Video on Youtube https://www.youtube.com/watch?v=QwXDyiKYOas
+See Video on Youtube https://www.youtube.com/watch?v=QwXDyiKYOas (Not upto date)
 
 ## License
 
