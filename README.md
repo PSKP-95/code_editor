@@ -2,6 +2,18 @@
 
 ## Installation & Information
 
+### PyPi (Last Release)
+
+```bash
+pip install code-rtc
+```
+
+Then run application using console
+
+```bash
+code-rtc
+```
+
 ### Linux Latest Version
 
 #### Step 1
@@ -20,18 +32,6 @@ Setup Database. In **backend/data** folder create sqlite3 database file
 sqlite3  code_RTC.db
 ```
 
-### PyPi (Last Release)
-
-```bash
-pip install code-rtc
-```
-
-Then run application using console
-
-```bash
-code-rtc
-```
-
 ##### Schema for Sqlite3
 
 ###### for bucket
@@ -48,8 +48,6 @@ CREATE TABLE bucket (
 );
 ```
 
-
-
 ###### for tests
 
 ```sql
@@ -65,8 +63,6 @@ CREATE TABLE tests (
   REFERENCES bucket(node_id)
 );
 ```
-
-
 
 #### Step 3
 
@@ -95,9 +91,11 @@ npm start
 - [x] Tab System
 
 ## Testing
+
 This application is tested on Ubuntu 19.10, Ubuntu 20.04, Windows 10 with Firefox Web Browser
 
 ## mysql and sqlite3
+
 Need to just change `DATABASE` in `code_rtc/backend/src/db.py`
 - mysql : for mysql / mariadb
 - sqlite3 : for sqlite3 
